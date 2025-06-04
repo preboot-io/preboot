@@ -1,0 +1,402 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <property name="author" value="auth-schema"/>
+    <property name="now" value="now()" dbms="postgresql"/>
+    <property name="nil.uuid" value="00000000-0000-0000-0000-000000000000"/>
+
+    <changeSet id="1-create-user_accounts-table" author="${author}">
+        <createTable tableName="user_accounts">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="uuid" type="UUID">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="username" type="VARCHAR(255)"/>
+            <column name="email" type="VARCHAR(255)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="language" type="VARCHAR(255)"/>
+            <column name="timezone" type="VARCHAR(255)"/>
+            <column name="active" type="BOOLEAN"/>
+            <column name="version" type="BIGINT"/>
+            <column name="reset_token_version" type="INT"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2-create-tenants-table" author="${author}">
+        <createTable tableName="tenants">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="uuid" type="UUID">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMPTZ"/>
+            <column name="attributes" type="JSONB"/>
+            <column name="active" type="BOOLEAN" defaultValueBoolean="true"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="3-create-user_account_credentials-table" author="${author}">
+        <createTable tableName="user_account_credentials">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_accounts" type="BIGINT"/>
+            <column name="type" type="VARCHAR(255)"/>
+            <column name="attribute" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="4-create-user_account_permissions-table" author="${author}">
+        <createTable tableName="user_account_permissions">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_accounts" type="BIGINT"/>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="tenant_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="5-create-user_account_roles-table" author="${author}">
+        <createTable tableName="user_account_roles">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_accounts" type="BIGINT"/>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="tenant_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="6-create-user_account_role_permissions-table" author="${author}">
+        <createTable tableName="user_account_role_permissions">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="role" type="VARCHAR(255)"/>
+            <column name="name" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="7-create-user_account_devices-table" author="${author}">
+        <createTable tableName="user_account_devices">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_accounts" type="BIGINT"/>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="device_fingerprint" type="VARCHAR(255)"/>
+            <column name="created_at" type="TIMESTAMPTZ"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="8-create-user_account_sessions-table" author="${author}">
+        <createTable tableName="user_account_sessions">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="session_id" type="UUID">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="user_account_id" type="UUID"/>
+            <column name="impersonated_by" type="UUID"/>
+            <column name="credential_type" type="VARCHAR(255)"/>
+            <column name="agent" type="VARCHAR(255)"/>
+            <column name="ip" type="VARCHAR(255)"/>
+            <column name="device_fingerprint" type="VARCHAR(255)"/>
+            <column name="created_at" type="TIMESTAMPTZ"/>
+            <column name="expires_at" type="TIMESTAMPTZ"/>
+            <column name="remember_me" type="BOOLEAN"/>
+            <column name="tenant_id" type="UUID"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="9-create-user_account_tenants-table" author="${author}">
+        <createTable tableName="user_account_tenants">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_account_uuid" type="UUID"/>
+            <column name="tenant_uuid" type="UUID"/>
+            <column name="last_used_at" type="TIMESTAMPTZ"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="10-create-tenant_roles-table" author="${author}">
+        <createTable tableName="tenant_roles">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="tenant_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addUniqueConstraint
+                tableName="tenant_roles"
+                columnNames="tenant_id, role_name"
+                constraintName="uk_tenant_role"/>
+    </changeSet>
+
+    <changeSet id="11-create-idx_user_accounts_uuid" author="${author}">
+        <createIndex indexName="idx_user_accounts_uuid" tableName="user_accounts">
+            <column name="uuid"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="12-create-idx_user_account_sessions_session_id" author="${author}">
+        <createIndex indexName="idx_user_account_sessions_session_id" tableName="user_account_sessions">
+            <column name="session_id"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="13-create-idx_user_account_sessions_expires_at" author="${author}">
+        <createIndex indexName="idx_user_account_sessions_expires_at" tableName="user_account_sessions">
+            <column name="expires_at"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="14-create-idx_tenant_roles_tenant_id" author="${author}">
+        <createIndex indexName="idx_tenant_roles_tenant_id" tableName="tenant_roles">
+            <column name="tenant_id"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="15-add-fk-user_account_credentials-to-user_accounts" author="${author}">
+        <addForeignKeyConstraint baseTableName="user_account_credentials"
+                                 baseColumnNames="user_accounts"
+                                 constraintName="fk_uac_user_accounts"
+                                 referencedTableName="user_accounts"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="16-add-fk-user_account_permissions-to-user_accounts" author="${author}">
+        <addForeignKeyConstraint baseTableName="user_account_permissions"
+                                 baseColumnNames="user_accounts"
+                                 constraintName="fk_uap_user_accounts"
+                                 referencedTableName="user_accounts"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="17-add-fk-user_account_roles-to-user_accounts" author="${author}">
+        <addForeignKeyConstraint baseTableName="user_account_roles"
+                                 baseColumnNames="user_accounts"
+                                 constraintName="fk_uar_user_accounts"
+                                 referencedTableName="user_accounts"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="18-add-fk-user_account_devices-to-user_accounts" author="${author}">
+        <addForeignKeyConstraint baseTableName="user_account_devices"
+                                 baseColumnNames="user_accounts"
+                                 constraintName="fk_uad_user_accounts"
+                                 referencedTableName="user_accounts"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="19-add-fk-user_account_sessions-user_account_id-to-user_accounts_uuid" author="${author}">
+        <addForeignKeyConstraint baseTableName="user_account_sessions"
+                                 baseColumnNames="user_account_id"
+                                 constraintName="fk_uas_user_account_id"
+                                 referencedTableName="user_accounts"
+                                 referencedColumnNames="uuid"/>
+    </changeSet>
+
+    <changeSet id="20-add-fk-user_account_sessions-impersonated_by-to-user_accounts_uuid" author="${author}">
+        <addForeignKeyConstraint baseTableName="user_account_sessions"
+                                 baseColumnNames="impersonated_by"
+                                 constraintName="fk_uas_impersonated_by"
+                                 referencedTableName="user_accounts"
+                                 referencedColumnNames="uuid"/>
+    </changeSet>
+
+    <changeSet id="21-add-fk-user_account_tenants-user_account_uuid-to-user_accounts_uuid" author="${author}">
+        <addForeignKeyConstraint baseTableName="user_account_tenants"
+                                 baseColumnNames="user_account_uuid"
+                                 constraintName="fk_uat_user_account_uuid"
+                                 referencedTableName="user_accounts"
+                                 referencedColumnNames="uuid"/>
+    </changeSet>
+
+    <changeSet id="22-add-fk-user_account_tenants-tenant_uuid-to-tenants_uuid" author="${author}">
+        <addForeignKeyConstraint baseTableName="user_account_tenants"
+                                 baseColumnNames="tenant_uuid"
+                                 constraintName="fk_uat_tenant_uuid"
+                                 referencedTableName="tenants"
+                                 referencedColumnNames="uuid"/>
+    </changeSet>
+
+    <changeSet id="admin-user-data-1-create-super-admin" author="${author}" dbms="postgresql">
+        <comment>Create super-admin user if it doesn't exist</comment>
+        <sql>
+            INSERT INTO user_accounts (
+                uuid,
+                username,
+                email,
+                language,
+                timezone,
+                active,
+                version,
+                reset_token_version
+            )
+            SELECT
+                gen_random_uuid(),
+                'super-admin',
+                'super-admin@system.local',
+                'en',
+                'UTC',
+                true,
+                1,
+                0
+            WHERE NOT EXISTS (
+                SELECT 1 FROM user_accounts WHERE email = 'super-admin@system.local'
+            );
+        </sql>
+        <rollback>
+            DELETE FROM user_accounts WHERE email = 'super-admin@system.local' AND username = 'super-admin';
+        </rollback>
+    </changeSet>
+
+    <changeSet id="admin-user-data-2-create-super-admin-role" author="${author}" dbms="postgresql">
+        <comment>Create role for the super-admin if it doesn't exist</comment>
+        <sql>
+            INSERT INTO user_account_roles (user_accounts, name, tenant_id)
+            SELECT id, 'super-admin', '${nil.uuid}'::UUID
+            FROM user_accounts
+            WHERE email = 'super-admin@system.local'
+              AND NOT EXISTS (
+                SELECT 1 FROM user_account_roles r
+                                  JOIN user_accounts ua_check ON r.user_accounts = ua_check.id
+                WHERE ua_check.email = 'super-admin@system.local' AND r.name = 'super-admin' AND r.tenant_id = '${nil.uuid}'::UUID
+            );
+        </sql>
+        <rollback>
+            DELETE FROM user_account_roles
+            WHERE name = 'super-admin'
+            AND tenant_id = '${nil.uuid}'::UUID
+            AND user_accounts = (SELECT id FROM user_accounts WHERE email = 'super-admin@system.local');
+        </rollback>
+    </changeSet>
+
+    <changeSet id="admin-user-data-3-add-super-admin-permissions" author="${author}">
+        <comment>Add role permissions for super-admin if they don't exist</comment>
+        <sql>
+            INSERT INTO user_account_role_permissions (role, name)
+            SELECT p.role, p.permission_name
+            FROM (
+                     VALUES
+                         ('super-admin', 'ADMIN_ACCESS'),
+                         ('super-admin', 'USER_MANAGEMENT'),
+                         ('super-admin', 'SYSTEM_CONFIGURATION')
+                 ) AS p(role, permission_name)
+            WHERE NOT EXISTS (
+                SELECT 1
+                FROM user_account_role_permissions
+                WHERE role = p.role AND name = p.permission_name
+            );
+        </sql>
+        <rollback>
+            DELETE FROM user_account_role_permissions
+            WHERE role = 'super-admin' AND name IN ('ADMIN_ACCESS', 'USER_MANAGEMENT', 'SYSTEM_CONFIGURATION');
+        </rollback>
+    </changeSet>
+
+    <changeSet id="admin-user-data-4-add-super-admin-credential" author="${author}">
+        <comment>Add credential for super-admin if it doesn't exist (password: changeme)</comment>
+        <sql>
+            INSERT INTO user_account_credentials (user_accounts, type, attribute)
+            SELECT ua.id, 'PASSWORD', '{bcrypt}$2a$12$njKaLRkUyfiNy1B1JkRadeMEtKBmjSXbjMlBA4vNoBAIVEgB6/JlW' -- Default password: "changeme"
+            FROM user_accounts ua
+            WHERE ua.email = 'super-admin@system.local'
+              AND NOT EXISTS (
+                SELECT 1
+                FROM user_account_credentials
+                WHERE user_accounts = ua.id
+                  AND type = 'PASSWORD'
+            );
+        </sql>
+        <rollback>
+            DELETE FROM user_account_credentials
+            WHERE type = 'PASSWORD'
+            AND user_accounts = (SELECT id FROM user_accounts WHERE email = 'super-admin@system.local');
+        </rollback>
+    </changeSet>
+
+    <changeSet id="admin-user-data-5-create-user-accounts-info-view" author="${author}">
+        <comment>Create or replace the user_accounts_info_view</comment>
+        <createView viewName="user_accounts_info_view" replaceIfExists="true">
+            WITH combined_permissions AS (
+                -- Direct user permissions
+                SELECT
+                    ua.id as user_id,
+                    uap.name as permission_name,
+                    uap.tenant_id as tenant_id
+                FROM user_accounts ua
+                         LEFT JOIN user_account_permissions uap ON uap.user_accounts = ua.id
+                WHERE uap.name IS NOT NULL
+
+                UNION DISTINCT
+
+            -- Role-based permissions
+            SELECT
+                ua.id as user_id,
+                urp.name as permission_name,
+                uar.tenant_id as tenant_id
+            FROM user_accounts ua
+                     LEFT JOIN user_account_roles uar ON uar.user_accounts = ua.id
+                     LEFT JOIN user_account_role_permissions urp ON urp.role = uar.name
+            WHERE urp.name IS NOT NULL
+                ),
+                 tenant_users AS (
+                     -- Get distinct user-tenant combinations from both roles and permissions
+                     SELECT DISTINCT ua.id as user_id, uar.tenant_id
+                     FROM user_accounts ua
+                              LEFT JOIN user_account_roles uar ON uar.user_accounts = ua.id
+                     WHERE uar.tenant_id IS NOT NULL
+
+                     UNION DISTINCT
+
+                     SELECT DISTINCT ua.id as user_id, uap.tenant_id
+                     FROM user_accounts ua
+                              LEFT JOIN user_account_permissions uap ON uap.user_accounts = ua.id
+                     WHERE uap.tenant_id IS NOT NULL
+                 )
+            SELECT
+                ua.id,
+                ua.uuid,
+                ua.username,
+                ua.email,
+                ua.active,
+                tu.tenant_id,
+                t.name as tenant_name,
+                STRING_AGG(DISTINCT uar.name, ',') as roles,
+                STRING_AGG(DISTINCT cp.permission_name, ',') as permissions
+            FROM user_accounts ua
+                     JOIN tenant_users tu ON tu.user_id = ua.id
+                     LEFT JOIN user_account_roles uar ON uar.user_accounts = ua.id AND uar.tenant_id = tu.tenant_id
+                     LEFT JOIN combined_permissions cp ON cp.user_id = ua.id AND cp.tenant_id = tu.tenant_id
+                     LEFT JOIN tenants t ON t.uuid = tu.tenant_id
+            GROUP BY ua.id, ua.uuid, ua.username, ua.email, ua.active, tu.tenant_id, t.name;
+        </createView>
+        <rollback>
+            DROP VIEW IF EXISTS user_accounts_info_view;
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

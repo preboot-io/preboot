@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    # The actual connection details will be provided programmatically by the PostgresContainer
+    url: jdbc:tc:postgresql:15.3:///testdb
+    username: test
+    password: test
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+
+  liquibase:
+    change-log: classpath:db/changelog/db-changelog-preboot-auth.xml
+    enabled: true
+
+preboot:
+  security:
+    jwt-secret: testsecretkey12345678901234567890
+    public-endpoints:
+      - /api/public/**
+      - /api/docs/**
+    enable-csrf: false
+    long-session-timeout-days: 2
+    password-reset-token-timeout-in-days: 1
+    session-timeout-minutes: 15

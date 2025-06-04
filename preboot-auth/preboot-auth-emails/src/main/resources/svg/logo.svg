@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 80" width="300" height="80">
+    <!-- Tło logo -->
+    <rect x="5" y="10" width="60" height="60" rx="12" fill="#0A192F"/>
+
+    <!-- Litera "P" -->
+    <path d="M20 25 L20 55 L25 55 L25 42 L35 42 C40 42 45 37 45 35 C45 33 40 25 35 25 Z" fill="#64ffda"/>
+    <rect x="25" y="30" width="12" height="5" fill="#0A192F"/>
+
+    <!-- Ikona "boot" - stylizowana strzałka w górę -->
+    <path d="M45 45 L50 35 L55 45 M50 45 L50 25" stroke="#64ffda" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+
+    <!-- Tekst "PreBoot" -->
+    <text x="80" y="35" font-family="Inter, sans-serif" font-size="28" font-weight="700" fill="#0A192F">PreBoot</text>
+
+    <!-- Tekst ".io" -->
+    <text x="190" y="35" font-family="Inter, sans-serif" font-size="24" font-weight="400" fill="#64ffda">.io</text>
+
+    <!-- Podtytuł -->
+    <text x="80" y="55" font-family="Inter, sans-serif" font-size="12" font-weight="400" fill="#4a5568">Build SaaS Apps Faster</text>
+</svg>

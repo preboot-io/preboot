@@ -1,0 +1,14 @@
+package io.preboot.securedata.annotation;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface SecureAccess {
+    AccessRule[] read() default {};
+
+    AccessRule[] write() default {};
+}

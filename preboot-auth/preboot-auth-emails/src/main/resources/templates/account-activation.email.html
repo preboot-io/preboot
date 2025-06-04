@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activate Your Account</title>
+    <th:block th:replace="~{styles :: styles}"></th:block>
+</head>
+<body>
+<div class="logo">
+    <img th:src="${logoBase64}" alt="Logo">
+</div>
+<div class="content">
+    <h1>Activate Your Account</h1>
+    <p>Hello <span th:text="${userName}"></span>,</p>
+    <p>Thank you for registering. To complete your registration and activate your account, please click the button below:</p>
+    <p style="text-align: center;">
+        <a th:href="${activationLink}" class="button">Activate Account</a>
+    </p>
+    <p>If the button above doesn't work, you can copy and paste the following link into your browser:</p>
+    <p class="break-words link" th:text="${activationLink}"></p>
+    <p>This link will expire in <span th:text="${tokenExpirationInDays}">24</span> days.</p>
+    <p>If you didn't request this account, please ignore this email.</p>
+    <p>Best regards,<br>The Team</p>
+</div>
+</body>
+</html>
