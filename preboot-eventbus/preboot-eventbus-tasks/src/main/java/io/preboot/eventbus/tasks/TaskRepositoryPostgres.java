@@ -34,17 +34,17 @@ class TaskRepositoryPostgres implements TaskRepository {
                                 .formatted(taskTableName),
                         task.getType(),
                         task.getPayload(),
-                        task.getNextRunAt(),
-                        task.getStartedAt(),
+                        convertInstantToTimestamp(task.getNextRunAt()),
+                        convertInstantToTimestamp(task.getStartedAt()),
                         task.getFailCount(),
                         task.getErrorMessage(),
                         task.getErrorStackTrace(),
                         task.isCompleted(),
-                        task.getCompletedAt(),
+                        convertInstantToTimestamp(task.getCompletedAt()),
                         task.isDead(),
-                        task.getCreatedAt(),
+                        convertInstantToTimestamp(task.getCreatedAt()),
                         task.getOptionalHash(),
-                        task.getHeartbeat(),
+                        convertInstantToTimestamp(task.getHeartbeat()),
                         task.getExecutorInstanceId());
             } else {
                 jdbcTemplate.update(
@@ -56,23 +56,27 @@ class TaskRepositoryPostgres implements TaskRepository {
                                 .formatted(taskTableName),
                         task.getType(),
                         task.getPayload(),
-                        task.getNextRunAt(),
-                        task.getStartedAt(),
+                        convertInstantToTimestamp(task.getNextRunAt()),
+                        convertInstantToTimestamp(task.getStartedAt()),
                         task.getFailCount(),
                         task.getErrorMessage(),
                         task.getErrorStackTrace(),
                         task.isCompleted(),
-                        task.getCompletedAt(),
+                        convertInstantToTimestamp(task.getCompletedAt()),
                         task.isDead(),
-                        task.getCreatedAt(),
+                        convertInstantToTimestamp(task.getCreatedAt()),
                         task.getOptionalHash(),
-                        task.getHeartbeat(),
+                        convertInstantToTimestamp(task.getHeartbeat()),
                         task.getExecutorInstanceId(),
                         task.getId());
             }
         } catch (DuplicateKeyException e) {
             throw new TaskHashExistsException();
         }
+    }
+
+    private static Timestamp convertInstantToTimestamp(Instant instant) {
+        return instant != null ? Timestamp.from(instant) : null;
     }
 
     @Override
