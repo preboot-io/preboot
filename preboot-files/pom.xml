@@ -10,6 +10,9 @@
     <artifactId>preboot-files</artifactId>
     <packaging>pom</packaging>
 
+    <name>PreBoot.io Community Edition :: Files</name>
+    <description>Parent POM for the PreBoot.io Community Edition Files parent module</description>
+
     <modules>
         <module>preboot-files-api</module>
         <module>preboot-files-in-memory</module>

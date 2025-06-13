@@ -10,6 +10,9 @@
     <artifactId>preboot-templates</artifactId>
     <packaging>pom</packaging>
 
+    <name>PreBoot.io Community Edition :: Templates Parent</name>
+    <description>Parent POM for the PreBoot.io Community Edition Templates parent module</description>
+
     <modules>
         <module>preboot-templates-api</module>
         <module>preboot-templates-thymeleaf</module>

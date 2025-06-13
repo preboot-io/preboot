@@ -9,6 +9,9 @@
 
     <artifactId>preboot-auth-core</artifactId>
 
+    <name>PreBoot.io Community Edition :: Auth Core</name>
+    <description>PreBoot.io Community Edition Auth Core module</description>
+
     <dependencyManagement>
         <dependencies>
             <dependency>

@@ -9,6 +9,9 @@
 
     <artifactId>preboot-eventbus-tasks</artifactId>
 
+    <name>PreBoot.io Community Edition :: Eventbus Tasks</name>
+    <description>Parent POM for the PreBoot.io Community Edition Eventbus Tasks module</description>
+
     <dependencyManagement>
         <dependencies>
             <dependency>

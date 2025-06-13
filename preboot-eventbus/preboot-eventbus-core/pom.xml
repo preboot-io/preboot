@@ -9,6 +9,9 @@
 
     <artifactId>preboot-eventbus-core</artifactId>
 
+    <name>PreBoot.io Community Edition :: Eventbus Core</name>
+    <description>Parent POM for the PreBoot.io Community Edition Eventbus Core module</description>
+
     <dependencyManagement>
         <dependencies>
             <dependency>

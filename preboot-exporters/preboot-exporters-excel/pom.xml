@@ -9,6 +9,9 @@
 
     <artifactId>preboot-exporters-excel</artifactId>
 
+    <name>PreBoot.io Community Edition :: Exporters Excel</name>
+    <description>Parent POM for the PreBoot.io Community Edition Exporters Excel module</description>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
