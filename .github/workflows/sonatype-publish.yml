@@ -8,7 +8,6 @@ jobs:
   publish:
     runs-on: ubuntu-latest
 
-    # Określ uprawnienia, aby akcja mogła importować klucz GPG
     permissions:
       contents: read
       packages: write
@@ -17,7 +16,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          # Pobierz całą historię, aby maven-release-plugin działał poprawnie
           fetch-depth: 0
 
       - name: Set up Java and GPG
@@ -25,19 +23,16 @@ jobs:
         with:
           distribution: 'corretto'
           java-version: '21'
-          # Konfiguracja serwera do publikacji
-          server-id: central # Musi pasować do <publishingServerId> w pom.xml
-          server-username: MAVEN_USERNAME # Użyj tej zmiennej dla loginu
-          server-password: MAVEN_PASSWORD # Użyj tej zmiennej dla hasła/tokenu
-          # Konfiguracja klucza GPG do podpisywania
-          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }} # Sekret z kluczem prywatnym
-          gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}   # Sekret z hasłem do klucza
+          server-id: central
+          server-username: MAVEN_USERNAME
+          server-password: MAVEN_PASSWORD
+          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
+          gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
+
 
       - name: Publish to Apache Maven Central
-        # Użyj profilu 'sonatypeDeploy' zdefiniowanego w pom.xml
-        # Zmienne MAVEN_USERNAME i MAVEN_PASSWORD są automatycznie używane przez setup-java do stworzenia settings.xml
-        # Zmienna GPG_PASSPHRASE jest używana do przekazania hasła do GPG
         run: mvn -B deploy -PsonatypeDeploy
         env:
           MAVEN_USERNAME: ${{ secrets.NEXUS_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
