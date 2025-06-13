@@ -6,32 +6,31 @@ on:
 
 jobs:
   publish:
-
     runs-on: ubuntu-latest
 
-    steps:
-      - uses: actions/checkout@v3
+    permissions:
+      contents: read
+      packages: write
 
-      - name: Set up JDK 17 for deploy to Sonatype
-        uses: actions/setup-java@v3
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
-          distribution: 'adopt'
-          java-version: 17
+          fetch-depth: 0
+
+      - name: Set up Java and GPG
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'corretto'
+          java-version: '21'
           server-id: central
           server-username: MAVEN_USERNAME
-          server-password: MAVEN_CENTRAL_TOKEN
+          server-password: MAVEN_PASSWORD
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
-          gpg-passphrase: MAVEN_GPG_PASSPHRASE
-
-      - name: Build with Maven
-        run: mvn -B package --file pom.xml
-
-      - name: Prepare Maven environnement with Java 17 for deployment to Sonatype
-        run: export MAVEN_OPTS="--add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.lang.reflect=ALL-UNNAMED --add-opens=java.base/java.text=ALL-UNNAMED --add-opens=java.desktop/java.awt.font=ALL-UNNAMED"
+          gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
 
       - name: Publish to Apache Maven Central
-        run: mvn deploy -PsonatypeDeploy
+        run: mvn -B deploy -PsonatypeDeploy
         env:
           MAVEN_USERNAME: ${{ secrets.NEXUS_USERNAME }}
-          MAVEN_CENTRAL_TOKEN: ${{ secrets.NEXUS_PASSWORD }}
-          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+          MAVEN_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
