@@ -1,3 +1,6 @@
+## 0.3.11
+preboot-auth-emails
+- added preboot logo as default one
 ## 0.3.10
 preboot-auth-emails
 - preboot.auth-emails.logoPath property added to customize email logo file
