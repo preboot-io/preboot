@@ -9,6 +9,10 @@
 
     <artifactId>preboot-templates-api</artifactId>
 
+    <name>PreBoot.io Community Edition :: Templates API</name>
+    <description>Parent POM for the PreBoot.io Community Edition Templates API module</description>
+
+
     <dependencyManagement>
         <dependencies>
             <dependency>

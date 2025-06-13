@@ -10,6 +10,9 @@
     <artifactId>preboot-bom</artifactId>
     <packaging>pom</packaging>
 
+    <name>PreBoot.io Community Edition :: BOM</name>
+    <description>PreBoot.io Community Edition BOM module</description>
+
     <properties>
         <!-- Define a default Spring Boot version for internal testing -->
         <spring-boot.version>3.4.1</spring-boot.version>

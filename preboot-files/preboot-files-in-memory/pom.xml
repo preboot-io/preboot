@@ -9,6 +9,9 @@
 
     <artifactId>preboot-files-in-memory</artifactId>
 
+    <name>PreBoot.io Community Edition :: Files In-Memory</name>
+    <description>Parent POM for the PreBoot.io Community Edition Files In-Memory module</description>
+
     <dependencyManagement>
         <dependencies>
             <dependency>

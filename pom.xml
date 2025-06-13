@@ -12,6 +12,7 @@
     <description>Parent POM for the PreBoot.io Community Edition library, speeding up modern SaaS development in Java
         and Spring Boot.
     </description>
+    <url>https://github.com/preboot-io/preboot-community</url>
 
     <licenses>
         <license>

@@ -9,6 +9,9 @@
 
     <artifactId>preboot-core</artifactId>
 
+    <name>PreBoot.io Community Edition :: Core</name>
+    <description>PreBoot.io Community Edition Core module</description>
+
     <dependencyManagement>
         <dependencies>
             <dependency>

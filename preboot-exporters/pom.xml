@@ -10,6 +10,9 @@
     <artifactId>preboot-exporters</artifactId>
     <packaging>pom</packaging>
 
+    <name>PreBoot.io Community Edition :: Exporters</name>
+    <description>Parent POM for the PreBoot.io Community Edition Exporters parent module</description>
+
     <modules>
         <module>preboot-exporters-api</module>
         <module>preboot-exporters-excel</module>

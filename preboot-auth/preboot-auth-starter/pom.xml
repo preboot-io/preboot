@@ -9,6 +9,9 @@
 
     <artifactId>preboot-auth-starter</artifactId>
 
+    <name>PreBoot.io Community Edition :: Auth Starter</name>
+    <description>PreBoot.io Community Edition Auth Starter POM module</description>
+
     <dependencyManagement>
         <dependencies>
             <dependency>

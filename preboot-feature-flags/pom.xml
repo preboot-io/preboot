@@ -9,6 +9,9 @@
 
     <artifactId>preboot-feature-flags</artifactId>
 
+    <name>PreBoot.io Community Edition :: Feature Flags</name>
+    <description>Parent POM for the PreBoot.io Community Edition Feature Flags module</description>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
