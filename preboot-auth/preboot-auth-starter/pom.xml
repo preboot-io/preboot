@@ -4,7 +4,7 @@
     <parent>
         <groupId>io.preboot</groupId>
         <artifactId>preboot-auth</artifactId>
-        <version>1.0.0</version>
+        <version>1.0.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>preboot-auth-starter</artifactId>
