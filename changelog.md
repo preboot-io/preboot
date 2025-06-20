@@ -1,8 +1,6 @@
 ## 1.1.0
 preboot-auth:
 - moved SessionAwareAuthentication from auth-core to auth-api
-- made preboot-query 'provided' in auth-api to prevent transitive dependencies
-- added explicit preboot-query dependency to auth-core where needed
 - added RunAsUserService for executing tasks under different user security contexts
 
 ## 0.3.11
