@@ -1,4 +1,4 @@
-package io.preboot.eventbus.tasks;
+package io.preboot.auth.core.service;
 
 import io.preboot.auth.api.SessionAwareAuthentication;
 import io.preboot.auth.api.UserAccountManagementApi;
@@ -8,7 +8,6 @@ import java.util.Set;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -16,7 +15,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
-@ConditionalOnBean(UserAccountManagementApi.class)
 @Slf4j
 @RequiredArgsConstructor
 public class RunAsUserService {

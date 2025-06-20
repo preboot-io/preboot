@@ -52,7 +52,6 @@
         <dependency>
             <groupId>io.preboot</groupId>
             <artifactId>preboot-query</artifactId>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
