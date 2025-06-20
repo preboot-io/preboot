@@ -1,8 +1,8 @@
 package io.preboot.auth.core.service;
 
+import io.preboot.auth.api.SessionAwareAuthentication;
 import io.preboot.auth.api.resolver.TenantResolver;
 import io.preboot.auth.core.model.UserAccountSession;
-import io.preboot.auth.core.spring.SessionAwareAuthentication;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;

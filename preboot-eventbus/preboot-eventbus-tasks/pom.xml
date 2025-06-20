@@ -34,6 +34,16 @@
             <artifactId>preboot-eventbus-core</artifactId>
         </dependency>
         <dependency>
+            <groupId>io.preboot</groupId>
+            <artifactId>preboot-auth-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jdbc</artifactId>
             <scope>provided</scope>

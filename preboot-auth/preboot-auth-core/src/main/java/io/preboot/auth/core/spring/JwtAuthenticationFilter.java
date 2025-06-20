@@ -1,5 +1,6 @@
 package io.preboot.auth.core.spring;
 
+import io.preboot.auth.api.SessionAwareAuthentication;
 import io.preboot.auth.api.dto.UserAccountInfo;
 import io.preboot.auth.api.exception.SessionExpiredException;
 import io.preboot.auth.core.service.JwtTokenService;
