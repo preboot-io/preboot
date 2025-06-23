@@ -335,11 +335,11 @@ public abstract class FilterableController<T, ID> {
 
     /**
      * Gets the repository name identifier for async export events. This helps the generic event handler identify which
-     * repository to use. Default implementation uses the simple class name of the repository.
+     * repository to use. Default implementation returns the first interface name of the repository class.
      *
-     * @return Repository name identifier
+     * @return Repository name identifier (fully qualified interface name)
      */
     protected String getRepositoryName() {
-        return repository.getClass().getSimpleName();
+        return repository.getClass().getInterfaces()[0].getName();
     }
 }
