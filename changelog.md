@@ -1,3 +1,7 @@
+## 1.1.0
+preboot-query:
+- added asynchronous export functionality to FilterableController and UuidFilterableController with generic processing
+
 ## 0.3.11
 preboot-auth-emails
 - added preboot logo as default one

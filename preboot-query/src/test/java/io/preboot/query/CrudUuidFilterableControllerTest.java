@@ -275,6 +275,21 @@ class CrudUuidFilterableControllerTest {
             }
             return existingEntity;
         }
+
+        @Override
+        protected UUID getCurrentUserId() {
+            return UUID.fromString("550e8400-e29b-41d4-a716-446655440000");
+        }
+
+        @Override
+        protected UUID getCurrentTenantId() {
+            return UUID.fromString("550e8400-e29b-41d4-a716-446655440001");
+        }
+
+        @Override
+        protected void publishAsyncExportEvent(Object event) {
+            // Test implementation - in real applications this would publish to event system
+        }
     }
 
     @Data
