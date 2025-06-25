@@ -1,5 +1,6 @@
 package io.preboot.auth.core.rest;
 
+import io.preboot.auth.api.SessionAwareAuthentication;
 import io.preboot.auth.api.UserAccountManagementApi;
 import io.preboot.auth.api.dto.CreateInactiveUserAccountRequest;
 import io.preboot.auth.api.dto.TenantUserAssignRequest;
@@ -8,7 +9,6 @@ import io.preboot.auth.api.exception.UserAccountNotFoundException;
 import io.preboot.auth.api.guard.TenantAdminRoleAccessGuard;
 import io.preboot.auth.api.resolver.TenantResolver;
 import io.preboot.auth.core.service.TenantUserService;
-import io.preboot.auth.core.spring.SessionAwareAuthentication;
 import io.preboot.query.SearchParams;
 import io.preboot.query.web.SearchRequest;
 import jakarta.validation.Valid;

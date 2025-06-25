@@ -18,6 +18,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -30,7 +31,7 @@ public class InMemoryFileStorageService implements FileStorageService {
 
     private final EventPublisher eventPublisher;
 
-    private static final long MAX_FILE_SIZE = 10 * 1024 * 1024;
+    private final long maxFileSize;
 
     private record StoredFile(FileMetadata metadata, byte[] content) {
         public long getMemoryFootprint() {
@@ -47,12 +48,17 @@ public class InMemoryFileStorageService implements FileStorageService {
         }
     }
 
-    public InMemoryFileStorageService(EventPublisher eventPublisher) {
+    public InMemoryFileStorageService(
+            EventPublisher eventPublisher, @Value("${preboot.files.max-file-size:52428800}") long maxFileSize) {
         this.eventPublisher = eventPublisher;
+        this.maxFileSize = maxFileSize;
         this.tenantStorage = new ConcurrentHashMap<>();
         this.tenantStorageUsage = new ConcurrentHashMap<>();
 
-        log.info("InMemoryFileStorageService initialized with concurrent storage architecture");
+        log.info(
+                "InMemoryFileStorageService initialized with max file size: {} bytes ({}MB)",
+                maxFileSize,
+                maxFileSize / (1024 * 1024));
     }
 
     @Override
@@ -227,10 +233,10 @@ public class InMemoryFileStorageService implements FileStorageService {
             throw new IllegalArgumentException("File content cannot be empty");
         }
 
-        if (fileBytes.length > MAX_FILE_SIZE) {
+        if (fileBytes.length > maxFileSize) {
             throw new FileStorageException(String.format(
                     "File size (%d bytes) exceeds maximum limit (%d bytes) for file: %s",
-                    fileBytes.length, MAX_FILE_SIZE, fileName));
+                    fileBytes.length, maxFileSize, fileName));
         }
 
         return fileBytes;
