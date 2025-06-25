@@ -11,6 +11,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.preboot.exporters.api.DataExporter;
 import io.preboot.query.FilterableUuidRepository;
 import io.preboot.query.HasUuid;
+import io.preboot.query.web.spi.QueryControllersPort;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -46,7 +47,15 @@ public abstract class CrudUuidFilterableController<T extends HasUuid, ID> extend
 
     protected CrudUuidFilterableController(
             FilterableUuidRepository<T, ID> repository, boolean supportsProjections, List<DataExporter> dataExporters) {
-        super(repository, supportsProjections, dataExporters);
+        this(repository, supportsProjections, dataExporters, null);
+    }
+
+    protected CrudUuidFilterableController(
+            FilterableUuidRepository<T, ID> repository,
+            boolean supportsProjections,
+            List<DataExporter> dataExporters,
+            QueryControllersPort controllersPort) {
+        super(repository, supportsProjections, dataExporters, controllersPort);
         this.repository = repository;
         this.objectMapper = new ObjectMapper()
                 .setSerializationInclusion(JsonInclude.Include.NON_NULL)

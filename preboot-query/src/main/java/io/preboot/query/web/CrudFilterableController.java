@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.preboot.exporters.api.DataExporter;
 import io.preboot.query.FilterableRepository;
+import io.preboot.query.web.spi.QueryControllersPort;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -45,7 +46,15 @@ public abstract class CrudFilterableController<T, ID> extends FilterableControll
 
     protected CrudFilterableController(
             FilterableRepository<T, ID> repository, boolean supportsProjections, List<DataExporter> dataExporters) {
-        super(repository, supportsProjections, dataExporters);
+        this(repository, supportsProjections, dataExporters, null);
+    }
+
+    protected CrudFilterableController(
+            FilterableRepository<T, ID> repository,
+            boolean supportsProjections,
+            List<DataExporter> dataExporters,
+            QueryControllersPort controllersPort) {
+        super(repository, supportsProjections, dataExporters, controllersPort);
         this.repository = repository;
         this.objectMapper = new ObjectMapper()
                 .setSerializationInclusion(JsonInclude.Include.NON_NULL)

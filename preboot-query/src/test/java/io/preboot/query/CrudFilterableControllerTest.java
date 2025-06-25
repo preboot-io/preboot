@@ -10,7 +10,6 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -190,21 +189,6 @@ class CrudFilterableControllerTest {
     static class TestController extends CrudFilterableController<TestEntity, Long> {
         TestController(FilterableRepository<TestEntity, Long> repository) {
             super(repository);
-        }
-
-        @Override
-        protected UUID getCurrentUserId() {
-            return UUID.fromString("550e8400-e29b-41d4-a716-446655440000");
-        }
-
-        @Override
-        protected UUID getCurrentTenantId() {
-            return UUID.fromString("550e8400-e29b-41d4-a716-446655440001");
-        }
-
-        @Override
-        protected void publishAsyncExportEvent(Object event) {
-            // Test implementation - in real applications this would publish to event system
         }
     }
 

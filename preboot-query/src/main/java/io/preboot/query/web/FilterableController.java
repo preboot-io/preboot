@@ -3,6 +3,8 @@ package io.preboot.query.web;
 import io.preboot.exporters.api.DataExporter;
 import io.preboot.query.FilterableRepository;
 import io.preboot.query.SearchParams;
+import io.preboot.query.web.spi.QueryControllersPort;
+import io.preboot.query.web.spi.UserContext;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -31,16 +33,26 @@ public abstract class FilterableController<T, ID> {
     private final FilterableRepository<T, ID> repository;
     private final boolean supportsProjections;
     protected final List<DataExporter> dataExporters;
+    private final QueryControllersPort controllersPort;
 
     protected FilterableController(FilterableRepository<T, ID> repository) {
-        this(repository, false, Collections.emptyList());
+        this(repository, false, Collections.emptyList(), null);
     }
 
     protected FilterableController(
             FilterableRepository<T, ID> repository, boolean supportsProjections, List<DataExporter> dataExporters) {
+        this(repository, supportsProjections, dataExporters, null);
+    }
+
+    protected FilterableController(
+            FilterableRepository<T, ID> repository,
+            boolean supportsProjections,
+            List<DataExporter> dataExporters,
+            QueryControllersPort controllersPort) {
         this.repository = repository;
         this.supportsProjections = supportsProjections;
         this.dataExporters = dataExporters;
+        this.controllersPort = controllersPort;
     }
 
     // READ
@@ -233,16 +245,22 @@ public abstract class FilterableController<T, ID> {
 
         Map<String, String> labels = prepareExportLabels();
 
+        // Check if async export is supported
+        if (!isAsyncExportSupported()) {
+            throw new UnsupportedOperationException("Async export is not supported.");
+        }
+
         // Get current user and tenant context
-        UUID userId = getCurrentUserId();
-        UUID tenantId = getCurrentTenantId();
+        UserContext userContext = controllersPort.getUserContext();
+        UUID userId = userContext.userId();
+        UUID tenantId = userContext.tenantId();
         String repositoryName = getRepositoryName();
 
         // Create and publish async export event
         AsyncExportEvent exportEvent =
                 new AsyncExportEvent(userId, tenantId, format, fileName, params, locale, labels, repositoryName);
 
-        publishAsyncExportEvent(exportEvent);
+        controllersPort.publishEvent(exportEvent);
 
         // Return accepted response with task information
         Map<String, String> response = Map.of(
@@ -306,32 +324,18 @@ public abstract class FilterableController<T, ID> {
         return repository;
     }
 
-    // Abstract methods for async export support - to be implemented by concrete controllers
+    // Support methods for async export functionality
+    // Note: Async export requires QueryControllersPort to be provided
     // This design avoids making preboot-query dependent on preboot-auth or preboot-eventbus
 
     /**
-     * Gets the current user ID from the security context. Implementations should retrieve this from their security
-     * context provider.
+     * Checks if async export functionality is available.
      *
-     * @return Current user ID
+     * @return true if controllers port is available
      */
-    protected abstract UUID getCurrentUserId();
-
-    /**
-     * Gets the current tenant ID from the security context. Implementations should retrieve this from their security
-     * context provider.
-     *
-     * @return Current tenant ID
-     */
-    protected abstract UUID getCurrentTenantId();
-
-    /**
-     * Publishes an async export event. Implementations should use their event publisher to publish the event to the
-     * appropriate event system.
-     *
-     * @param event The event to publish
-     */
-    protected abstract void publishAsyncExportEvent(Object event);
+    protected boolean isAsyncExportSupported() {
+        return controllersPort != null;
+    }
 
     /**
      * Gets the repository name identifier for async export events. This helps the generic event handler identify which
