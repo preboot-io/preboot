@@ -1,3 +1,7 @@
+## 1.1.0
+preboot-exporters:
+- added OutputStream support to DataExporter for streaming large datasets
+
 ## 0.3.11
 preboot-auth-emails
 - added preboot logo as default one

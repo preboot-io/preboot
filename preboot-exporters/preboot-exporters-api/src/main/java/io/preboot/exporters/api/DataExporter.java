@@ -2,6 +2,7 @@ package io.preboot.exporters.api;
 
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -40,5 +41,20 @@ public interface DataExporter {
      */
     <T> void exportToResponse(
             String fileName, Map<String, String> labels, HttpServletResponse response, Locale locale, Stream<T> data)
+            throws IOException;
+
+    /**
+     * Exports data to a specified format and returns an OutputStream.
+     *
+     * @param fileName The name of the file to be generated
+     * @param labels Map of column labels. Key is the field name in the object, value is the header label
+     * @param outputStream The output stream to write to
+     * @param locale Locale settings
+     * @param data Data to export
+     * @param <T> Entity type
+     * @throws IOException In case of writing error
+     */
+    <T> void exportToOutputStream(
+            String fileName, Map<String, String> labels, OutputStream outputStream, Locale locale, Stream<T> data)
             throws IOException;
 }
