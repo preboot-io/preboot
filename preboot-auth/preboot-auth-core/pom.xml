@@ -44,11 +44,6 @@
             <groupId>io.preboot</groupId>
             <artifactId>preboot-eventbus-core</artifactId>
         </dependency>
-        <dependency>
-            <groupId>io.preboot</groupId>
-            <artifactId>preboot-query</artifactId>
-        </dependency>
-
         <!-- External dependencies -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
