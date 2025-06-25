@@ -9,6 +9,7 @@ import io.preboot.exporters.api.DataExporter;
 import io.preboot.exporters.api.RowDecorator;
 import io.preboot.exporters.api.RowDecoratorProvider;
 import io.preboot.exporters.api.ValueTranslator;
+import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -59,7 +60,7 @@ public class ExcelService implements DataExporter {
         this.valueTranslator = valueTranslator;
     }
 
-    @jakarta.annotation.PostConstruct
+    @PostConstruct
     private void init() {
         log.info("ExcelService initialized with windowSize: {}, serverZoneId: {}", windowSize, serverZoneId);
     }
