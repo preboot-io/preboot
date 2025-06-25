@@ -9,8 +9,10 @@ import io.preboot.exporters.api.DataExporter;
 import io.preboot.exporters.api.RowDecorator;
 import io.preboot.exporters.api.RowDecoratorProvider;
 import io.preboot.exporters.api.ValueTranslator;
+import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.charset.CharsetEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.*;
@@ -24,7 +26,6 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.streaming.SXSSFSheet;
@@ -35,7 +36,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
-@RequiredArgsConstructor
 public class ExcelService implements DataExporter {
     public static final String XLSX_FORMAT = "xlsx";
     public static final String XLSX_CONTENT_TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
@@ -54,6 +54,16 @@ public class ExcelService implements DataExporter {
 
     private final ObjectMapper objectMapper;
     private final ValueTranslator valueTranslator;
+
+    public ExcelService(ObjectMapper objectMapper, ValueTranslator valueTranslator) {
+        this.objectMapper = objectMapper;
+        this.valueTranslator = valueTranslator;
+    }
+
+    @PostConstruct
+    private void init() {
+        log.info("ExcelService initialized with windowSize: {}, serverZoneId: {}", windowSize, serverZoneId);
+    }
 
     @Override
     public String getSupportedFormat() {
@@ -77,8 +87,23 @@ public class ExcelService implements DataExporter {
 
         response.setHeader(CONTENT_DISPOSITION, createUTF8ContentDisposition(exportFileName));
         response.setContentType(XLSX_CONTENT_TYPE);
+        exportToOutputStream(fileName, labels, response.getOutputStream(), locale, data);
+    }
+
+    @Override
+    public <T> void exportToOutputStream(
+            String fileName, Map<String, String> labels, OutputStream outputStream, Locale locale, Stream<T> data)
+            throws IOException {
+
+        log.debug("Exporting to OutputStream with fileName: {} for format: {}", fileName, getSupportedFormat());
+
         try (SXSSFWorkbook workbook = createWorkbook(data, locale, labels)) {
-            workbook.write(response.getOutputStream());
+            workbook.write(outputStream);
+            outputStream.flush();
+            log.debug("Successfully exported data to OutputStream for fileName: {}", fileName);
+        } catch (Exception e) {
+            log.error("Failed to export data to OutputStream for fileName: {}: {}", fileName, e.getMessage(), e);
+            throw new IOException("Export to OutputStream failed", e);
         }
     }
 

@@ -2,10 +2,16 @@
 preboot-auth:
 - moved SessionAwareAuthentication from auth-core to auth-api
 - added RunAsUserService for executing tasks under different user security contexts
+preboot-files:
+- made max file size configurable in in-memory file storage service
+- added property `preboot.files.max-file-size` (default: 52428800 bytes / 50MB)
+preboot-exporters:
+- added OutputStream support to DataExporter for streaming large datasets
 
-## 0.3.11
+## 0.3.11 -> Becomed v1.0.0
 preboot-auth-emails
 - added preboot logo as default one
+
 ## 0.3.10
 preboot-auth-emails
 - preboot.auth-emails.logoPath property added to customize email logo file
