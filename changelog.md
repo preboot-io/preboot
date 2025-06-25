@@ -1,4 +1,6 @@
 ## 1.1.0
+preboot-query:
+- added asynchronous export functionality to FilterableController and UuidFilterableController with generic processing
 preboot-auth:
 - moved SessionAwareAuthentication from auth-core to auth-api
 - added RunAsUserService for executing tasks under different user security contexts

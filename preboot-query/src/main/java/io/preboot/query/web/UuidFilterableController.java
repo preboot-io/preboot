@@ -4,6 +4,8 @@ import io.preboot.exporters.api.DataExporter;
 import io.preboot.query.FilterableUuidRepository;
 import io.preboot.query.HasUuid;
 import io.preboot.query.SearchParams;
+import io.preboot.query.web.spi.QueryControllersPort;
+import io.preboot.query.web.spi.UserContext;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -31,16 +33,26 @@ public abstract class UuidFilterableController<T extends HasUuid, ID> {
     private final FilterableUuidRepository<T, ID> repository;
     private final boolean supportsProjections;
     protected final List<DataExporter> dataExporters;
+    private final QueryControllersPort controllersPort;
 
     protected UuidFilterableController(FilterableUuidRepository<T, ID> repository) {
-        this(repository, false, Collections.emptyList());
+        this(repository, false, Collections.emptyList(), null);
     }
 
     protected UuidFilterableController(
             FilterableUuidRepository<T, ID> repository, boolean supportsProjections, List<DataExporter> dataExporters) {
+        this(repository, supportsProjections, dataExporters, null);
+    }
+
+    protected UuidFilterableController(
+            FilterableUuidRepository<T, ID> repository,
+            boolean supportsProjections,
+            List<DataExporter> dataExporters,
+            QueryControllersPort controllersPort) {
         this.repository = repository;
         this.supportsProjections = supportsProjections;
         this.dataExporters = dataExporters;
+        this.controllersPort = controllersPort;
     }
 
     // READ
@@ -187,6 +199,83 @@ public abstract class UuidFilterableController<T extends HasUuid, ID> {
     }
 
     /**
+     * Initiates an asynchronous export operation. The export will be processed in the background and the result will be
+     * stored as a file.
+     *
+     * @param format Export format (e.g. "xlsx", "pdf", "csv")
+     * @param exportRequest Request containing file name and search parameters
+     * @param locale Locale settings
+     * @return Response indicating the export has been queued
+     * @throws UnsupportedOperationException If the format is not supported
+     */
+    @Operation(
+            summary = "Export data asynchronously in specified format",
+            description =
+                    "Initiates an async export job that will process the data in the background and store the result as a file",
+            parameters = {
+                @Parameter(
+                        name = "format",
+                        in = ParameterIn.PATH,
+                        required = true,
+                        description = "Export format (e.g. xlsx, pdf, csv)",
+                        schema = @Schema(type = "string"))
+            })
+    @ApiResponse(
+            responseCode = "202",
+            description = "Export request has been accepted and queued for processing",
+            content = @Content(mediaType = "application/json"))
+    @PostMapping("/export-async/{format}")
+    public ResponseEntity<Map<String, String>> exportDataAsync(
+            @PathVariable String format, @RequestBody @Valid ExportRequest exportRequest, Locale locale) {
+
+        // Validate format is supported
+        DataExporter exporter = findExporterForFormat(format);
+        if (exporter == null) {
+            throw new UnsupportedOperationException("Export format '" + format + "' is not supported");
+        }
+
+        String fileName = exportRequest.fileName() != null ? exportRequest.fileName() : "export";
+
+        SearchParams params = SearchParams.builder()
+                .filters(exportRequest.searchRequest().filters())
+                .sortField(exportRequest.searchRequest().sortField())
+                .sortDirection(exportRequest.searchRequest().sortDirection())
+                .build();
+
+        Map<String, String> labels = prepareExportLabels();
+
+        // Check if async export is supported
+        if (!isAsyncExportSupported()) {
+            throw new UnsupportedOperationException("Async export is not supported.");
+        }
+
+        // Get current user and tenant context
+        UserContext userContext = controllersPort.getUserContext();
+        UUID userId = userContext.userId();
+        UUID tenantId = userContext.tenantId();
+        String repositoryName = getRepositoryName();
+
+        // Create and publish async export event
+        AsyncExportEvent exportEvent =
+                new AsyncExportEvent(userId, tenantId, format, fileName, params, locale, labels, repositoryName);
+
+        controllersPort.publishEvent(exportEvent);
+
+        // Return accepted response with task information
+        Map<String, String> response = Map.of(
+                "status",
+                "accepted",
+                "message",
+                "Export request has been queued for processing",
+                "format",
+                format,
+                "fileName",
+                fileName + "." + format);
+
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
+    }
+
+    /**
      * Finds an exporter for the specified format.
      *
      * @param format Export format
@@ -232,5 +321,28 @@ public abstract class UuidFilterableController<T extends HasUuid, ID> {
     /** Access to the underlying repository for custom operations. */
     protected FilterableUuidRepository<T, ID> getRepository() {
         return repository;
+    }
+
+    // Support methods for async export functionality
+    // Note: Async export requires QueryControllersPort to be provided
+    // This design avoids making preboot-query dependent on preboot-auth or preboot-eventbus
+
+    /**
+     * Checks if async export functionality is available.
+     *
+     * @return true if controllers port is available
+     */
+    protected boolean isAsyncExportSupported() {
+        return controllersPort != null;
+    }
+
+    /**
+     * Gets the repository name identifier for async export events. This helps the generic event handler identify which
+     * repository to use. Default implementation returns the first interface name of the repository class.
+     *
+     * @return Repository name identifier (fully qualified interface name)
+     */
+    protected String getRepositoryName() {
+        return repository.getClass().getInterfaces()[0].getName();
     }
 }
