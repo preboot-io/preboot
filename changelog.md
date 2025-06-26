@@ -1,3 +1,7 @@
+## 1.1.1
+preboot-eventbus-core:
+- fixed thread safety in event handler initialization
+
 ## 1.1.0
 preboot-query:
 - added asynchronous export functionality to FilterableController and UuidFilterableController with generic processing
