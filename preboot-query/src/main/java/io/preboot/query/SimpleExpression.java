@@ -151,6 +151,17 @@ public class SimpleExpression implements CriteriaExpression {
 
     /** Attempts to convert a value to the property's type if needed. */
     private Object convertValueIfNeeded(Object value, RelationalPersistentProperty property) {
+        // Handle enum values by converting them to their string representation
+        if (value instanceof Enum<?>) {
+            return ((Enum<?>) value).name();
+        }
+        
+        // Handle Instant values by converting them to their string representation
+        // This ensures proper parameter binding with PostgreSQL's timestamp with time zone
+        if (value instanceof Instant) {
+            return ((Instant) value).toString();
+        }
+        
         if (value instanceof String) {
             String stringValue = (String) value;
             Class<?> targetType = property.getType();

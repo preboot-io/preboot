@@ -2,6 +2,11 @@
 preboot-eventbus-core:
 - fixed thread safety in event handler initialization
 
+preboot-query:
+- fixed enum handling in FilterCriteria - enum values are now automatically converted to their string representation
+- added support for passing enum instances directly to FilterCriteria.eq(), FilterCriteria.neq(), FilterCriteria.in(), and other filter operations
+- eliminates need for manual enum.name() conversion when filtering by enum fields
+
 ## 1.1.0
 preboot-query:
 - added asynchronous export functionality to FilterableController and UuidFilterableController with generic processing
