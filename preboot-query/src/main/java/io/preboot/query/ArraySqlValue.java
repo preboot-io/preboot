@@ -66,6 +66,8 @@ class ArraySqlValue implements SqlValue {
             return "boolean";
         } else if (firstNonNull instanceof LocalDateTime) {
             return "timestamp";
+        } else if (firstNonNull instanceof java.sql.Timestamp) {
+            return "timestamp";
         } else if (firstNonNull instanceof LocalDate) {
             return "date";
         } else if (firstNonNull instanceof Enum) {

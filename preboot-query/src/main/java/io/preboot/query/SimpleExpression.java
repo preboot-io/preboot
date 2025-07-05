@@ -156,10 +156,10 @@ public class SimpleExpression implements CriteriaExpression {
             return ((Enum<?>) value).name();
         }
         
-        // Handle Instant values by converting them to their string representation
-        // This ensures proper parameter binding with PostgreSQL's timestamp with time zone
+        // Handle Instant values by converting them to java.sql.Timestamp
+        // This ensures proper parameter binding with JDBC drivers and maintains precision
         if (value instanceof Instant) {
-            return ((Instant) value).toString();
+            return java.sql.Timestamp.from((Instant) value);
         }
         
         if (value instanceof String) {
@@ -180,7 +180,8 @@ public class SimpleExpression implements CriteriaExpression {
                     } else if (LocalDate.class.isAssignableFrom(targetType)) {
                         return LocalDate.parse(stringValue);
                     } else if (Instant.class.isAssignableFrom(targetType)) {
-                        return Instant.parse(stringValue);
+                        // Convert string to Instant and then to Timestamp for PostgreSQL compatibility
+                        return java.sql.Timestamp.from(Instant.parse(stringValue));
                     }
                 } catch (DateTimeParseException e) {
                     log.warn("Failed to parse '{}' as {}: {}", stringValue, targetType.getSimpleName(), e.getMessage());
@@ -289,11 +290,7 @@ public class SimpleExpression implements CriteriaExpression {
             }
         }
 
-        // For temporal types with string values, apply explicit CAST to ensure proper comparison
         String paramPlaceholder = ":" + paramName;
-        if (property != null && value instanceof String && isTemporalType(property.getType())) {
-            paramPlaceholder = "CAST(" + paramPlaceholder + " AS TIMESTAMP)";
-        }
 
         switch (operator) {
             case "=":
@@ -319,15 +316,7 @@ public class SimpleExpression implements CriteriaExpression {
                 return columnRef + " <= " + paramPlaceholder;
             case "BETWEEN":
             case "between":
-                if (property != null
-                        && value instanceof Object[]
-                        && ((Object[]) value)[0] instanceof String
-                        && isTemporalType(property.getType())) {
-                    return columnRef + " BETWEEN CAST(:" + paramName + "From AS TIMESTAMP) AND CAST(:" + paramName
-                            + "To AS TIMESTAMP)";
-                } else {
-                    return columnRef + " BETWEEN :" + paramName + "From AND :" + paramName + "To";
-                }
+                return columnRef + " BETWEEN :" + paramName + "From AND :" + paramName + "To";
             case "IN":
             case "in":
                 return columnRef + " = ANY(:" + paramName + ")";

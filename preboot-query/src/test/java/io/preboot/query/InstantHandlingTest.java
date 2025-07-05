@@ -22,15 +22,41 @@ import org.springframework.transaction.annotation.Transactional;
 @Sql("/test-data-instant.sql")
 public class InstantHandlingTest {
 
+    // Test data timestamps (actual values as read from database after timezone conversion)
+    private static final Instant USER_REGISTRATION_TIME = Instant.parse("2024-01-01T09:00:00Z");
+    private static final Instant PAYMENT_PROCESSED_TIME = Instant.parse("2024-01-02T10:30:00Z");
+    private static final Instant ORDER_CREATED_TIME = Instant.parse("2024-01-03T13:45:00Z");
+    private static final Instant USER_LOGIN_TIME = Instant.parse("2024-01-04T08:15:00Z");
+
+    // Cutoff times for range queries
+    private static final Instant CUTOFF_AFTER_JAN_4_NOON = Instant.parse("2024-01-04T12:00:00Z");
+    private static final Instant CUTOFF_BEFORE_JAN_3_MIDNIGHT = Instant.parse("2024-01-03T00:00:00Z");
+    private static final Instant RANGE_START_JAN_2 = Instant.parse("2024-01-02T00:00:00Z");
+    private static final Instant RANGE_END_JAN_5 = Instant.parse("2024-01-05T00:00:00Z");
+
+    // Additional cutoff times for specific tests
+    private static final Instant JAN_1_MIDNIGHT = Instant.parse("2024-01-01T00:00:00Z");
+    private static final Instant JAN_4_MIDNIGHT = Instant.parse("2024-01-04T00:00:00Z");
+    private static final Instant CUTOFF_AFTER_JAN_3_AFTERNOON = Instant.parse("2024-01-03T13:45:00Z");
+    private static final Instant CUTOFF_AFTER_JAN_5_AFTERNOON = Instant.parse("2024-01-05T15:20:00Z");
+
+    // String representations for string-based tests
+    private static final String PAYMENT_PROCESSED_TIME_STR = "2024-01-02T10:30:00Z";
+    private static final String ORDER_CREATED_TIME_STR = "2024-01-03T13:45:00Z";
+    private static final String CUTOFF_BEFORE_JAN_3_MIDNIGHT_STR = "2024-01-03T00:00:00Z";
+    private static final String RANGE_START_JAN_2_STR = "2024-01-02T00:00:00Z";
+    private static final String RANGE_END_JAN_5_STR = "2024-01-05T00:00:00Z";
+    private static final String PAYMENT_PROCESSED_ALT_TIME_STR = "2024-01-02T10:30:00Z";
+    private static final String PAYMENT_FAILED_ALT_TIME_STR = "2024-01-05T15:20:00Z";
+
     @Autowired
     private TestEventRepository eventRepository;
 
     @Test
     void testInstantEquality_WithInstantValue_ShouldWork() {
         // Given
-        Instant targetTime = Instant.parse("2024-01-02T11:30:00Z");
         SearchParams params = SearchParams.criteria(
-            FilterCriteria.eq("eventTimestamp", targetTime)
+            FilterCriteria.eq("eventTimestamp", PAYMENT_PROCESSED_TIME)
         ).build();
 
         // When
@@ -39,14 +65,14 @@ public class InstantHandlingTest {
         // Then
         assertThat(result.getContent()).hasSize(1);
         assertThat(result.getContent().get(0).getEventName()).isEqualTo("Payment Processed");
-        assertThat(result.getContent().get(0).getEventTimestamp()).isEqualTo(targetTime);
+        assertThat(result.getContent().get(0).getEventTimestamp()).isEqualTo(PAYMENT_PROCESSED_TIME);
     }
 
     @Test
     void testInstantEquality_WithStringValue_ShouldWork() {
         // Given
         SearchParams params = SearchParams.criteria(
-            FilterCriteria.eq("eventTimestamp", "2024-01-02T11:30:00Z")
+            FilterCriteria.eq("eventTimestamp", PAYMENT_PROCESSED_TIME_STR)
         ).build();
 
         // When
@@ -60,13 +86,12 @@ public class InstantHandlingTest {
     @Test
     void testInstantEquality_BothInstantAndString_ShouldProduceSameResults() {
         // Given
-        Instant targetTime = Instant.parse("2024-01-03T14:45:00Z");
         SearchParams instantParams = SearchParams.criteria(
-            FilterCriteria.eq("eventTimestamp", targetTime)
+            FilterCriteria.eq("eventTimestamp", ORDER_CREATED_TIME)
         ).build();
-        
+
         SearchParams stringParams = SearchParams.criteria(
-            FilterCriteria.eq("eventTimestamp", "2024-01-03T14:45:00Z")
+            FilterCriteria.eq("eventTimestamp", ORDER_CREATED_TIME_STR)
         ).build();
 
         // When
@@ -84,9 +109,8 @@ public class InstantHandlingTest {
     @Test
     void testInstantGreaterThan_WithInstantValue_ShouldWork() {
         // Given
-        Instant cutoffTime = Instant.parse("2024-01-04T12:00:00Z");
         SearchParams params = SearchParams.criteria(
-            FilterCriteria.gt("eventTimestamp", cutoffTime)
+            FilterCriteria.gt("eventTimestamp", CUTOFF_AFTER_JAN_4_NOON)
         ).build();
 
         // When
@@ -103,7 +127,7 @@ public class InstantHandlingTest {
     void testInstantLessThan_WithStringValue_ShouldWork() {
         // Given
         SearchParams params = SearchParams.criteria(
-            FilterCriteria.lt("eventTimestamp", "2024-01-03T00:00:00Z")
+            FilterCriteria.lt("eventTimestamp", CUTOFF_BEFORE_JAN_3_MIDNIGHT_STR)
         ).build();
 
         // When
@@ -119,10 +143,8 @@ public class InstantHandlingTest {
     @Test
     void testInstantBetween_WithInstantValues_ShouldWork() {
         // Given
-        Instant startTime = Instant.parse("2024-01-02T00:00:00Z");
-        Instant endTime = Instant.parse("2024-01-05T00:00:00Z");
         SearchParams params = SearchParams.criteria(
-            FilterCriteria.between("eventTimestamp", startTime, endTime)
+            FilterCriteria.between("eventTimestamp", RANGE_START_JAN_2, RANGE_END_JAN_5)
         ).build();
 
         // When
@@ -139,7 +161,7 @@ public class InstantHandlingTest {
     void testInstantBetween_WithStringValues_ShouldWork() {
         // Given
         SearchParams params = SearchParams.criteria(
-            FilterCriteria.between("eventTimestamp", "2024-01-02T00:00:00Z", "2024-01-05T00:00:00Z")
+            FilterCriteria.between("eventTimestamp", RANGE_START_JAN_2_STR, RANGE_END_JAN_5_STR)
         ).build();
 
         // When
@@ -155,9 +177,8 @@ public class InstantHandlingTest {
     @Test
     void testInstantNotEquals_WithInstantValue_ShouldWork() {
         // Given
-        Instant excludeTime = Instant.parse("2024-01-04T09:15:00Z");
         SearchParams params = SearchParams.criteria(
-            FilterCriteria.neq("eventTimestamp", excludeTime)
+            FilterCriteria.neq("eventTimestamp", USER_LOGIN_TIME)
         ).build();
 
         // When
@@ -173,9 +194,8 @@ public class InstantHandlingTest {
     @Test
     void testInstantGreaterThanOrEqual_ShouldWork() {
         // Given
-        Instant cutoffTime = Instant.parse("2024-01-05T16:20:00Z");
         SearchParams params = SearchParams.criteria(
-            FilterCriteria.gte("eventTimestamp", cutoffTime)
+            FilterCriteria.gte("eventTimestamp", CUTOFF_AFTER_JAN_5_AFTERNOON)
         ).build();
 
         // When
@@ -191,9 +211,8 @@ public class InstantHandlingTest {
     @Test
     void testInstantLessThanOrEqual_ShouldWork() {
         // Given
-        Instant cutoffTime = Instant.parse("2024-01-03T14:45:00Z");
         SearchParams params = SearchParams.criteria(
-            FilterCriteria.lte("eventTimestamp", cutoffTime)
+            FilterCriteria.lte("eventTimestamp", CUTOFF_AFTER_JAN_3_AFTERNOON)
         ).build();
 
         // When
@@ -209,10 +228,9 @@ public class InstantHandlingTest {
     @Test
     void testInstantWithAndCondition_ShouldWork() {
         // Given
-        Instant afterTime = Instant.parse("2024-01-01T00:00:00Z");
         SearchParams params = SearchParams.criteria(
             FilterCriteria.and(List.of(
-                FilterCriteria.gt("eventTimestamp", afterTime),
+                FilterCriteria.gt("eventTimestamp", JAN_1_MIDNIGHT),
                 FilterCriteria.eq("eventType", "PAYMENT_EVENT")
             ))
         ).build();
@@ -230,9 +248,8 @@ public class InstantHandlingTest {
     @Test
     void testCountWithInstantFilter_ShouldWork() {
         // Given
-        Instant afterTime = Instant.parse("2024-01-04T00:00:00Z");
         SearchParams params = SearchParams.criteria(
-            FilterCriteria.gt("eventTimestamp", afterTime)
+            FilterCriteria.gt("eventTimestamp", JAN_4_MIDNIGHT)
         ).build();
 
         // When
@@ -294,10 +311,8 @@ public class InstantHandlingTest {
     @Test
     void testInstantInOperator_WithInstantValues_ShouldWork() {
         // Given
-        Instant time1 = Instant.parse("2024-01-01T10:00:00Z");
-        Instant time2 = Instant.parse("2024-01-03T14:45:00Z");
         SearchParams params = SearchParams.criteria(
-            FilterCriteria.in("eventTimestamp", time1, time2)
+            FilterCriteria.in("eventTimestamp", USER_REGISTRATION_TIME, CUTOFF_AFTER_JAN_3_AFTERNOON)
         ).build();
 
         // When
@@ -314,7 +329,7 @@ public class InstantHandlingTest {
     void testInstantInOperator_WithStringValues_ShouldWork() {
         // Given
         SearchParams params = SearchParams.criteria(
-            FilterCriteria.in("eventTimestamp", "2024-01-02T11:30:00Z", "2024-01-05T16:20:00Z")
+            FilterCriteria.in("eventTimestamp", PAYMENT_PROCESSED_ALT_TIME_STR, PAYMENT_FAILED_ALT_TIME_STR)
         ).build();
 
         // When
