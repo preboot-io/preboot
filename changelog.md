@@ -2,6 +2,14 @@
 preboot-eventbus-core:
 - fixed thread safety in event handler initialization
 
+preboot-query:
+- fixed enum handling in FilterCriteria - enum values are now automatically converted to their string representation
+- added support for passing enum instances directly to FilterCriteria.eq(), FilterCriteria.neq(), FilterCriteria.in(), and other filter operations
+- eliminates need for manual enum.name() conversion when filtering by enum fields
+- fixed Instant type handling for PostgreSQL compatibility - Instant values are now properly converted to java.sql.Timestamp
+- added support for string-based date inputs when filtering Instant fields (both direct string values and string arrays)
+- fixed array type inference for IN operations with temporal values (Instant, LocalDateTime, java.sql.Timestamp)
+
 ## 1.1.0
 preboot-query:
 - added asynchronous export functionality to FilterableController and UuidFilterableController with generic processing
