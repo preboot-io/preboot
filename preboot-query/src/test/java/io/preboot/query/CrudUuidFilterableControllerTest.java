@@ -2,8 +2,8 @@ package io.preboot.query;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.preboot.query.web.CrudUuidFilterableController;
@@ -148,7 +148,7 @@ class CrudUuidFilterableControllerTest {
             // Arrange
             UUID wrongUuid = UUID.randomUUID();
             TestEntity entityWithWrongUuid = TestEntity.builder()
-                    .uuid(wrongUuid)  // Different UUID than path parameter
+                    .uuid(wrongUuid) // Different UUID than path parameter
                     .name("Updated Name")
                     .amount(BigDecimal.valueOf(200))
                     .build();
