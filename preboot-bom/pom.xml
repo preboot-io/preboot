@@ -4,7 +4,7 @@
     <parent>
         <groupId>io.preboot</groupId>
         <artifactId>preboot-parent</artifactId>
-        <version>1.1.0-SNAPSHOT</version>
+        <version>1.1.0</version>
     </parent>
 
     <artifactId>preboot-bom</artifactId>
@@ -29,96 +29,96 @@
             <dependency>
                 <groupId>io.preboot</groupId>
                 <artifactId>preboot-core</artifactId>
-                <version>1.1.0-SNAPSHOT</version>
+                <version>1.1.0</version>
             </dependency>
 
             <!-- Main modules -->
             <dependency>
                 <groupId>io.preboot</groupId>
                 <artifactId>preboot-eventbus-core</artifactId>
-                <version>1.1.0-SNAPSHOT</version>
+                <version>1.1.0</version>
             </dependency>
             <dependency>
                 <groupId>io.preboot</groupId>
                 <artifactId>preboot-eventbus-tasks</artifactId>
-                <version>1.1.0-SNAPSHOT</version>
+                <version>1.1.0</version>
             </dependency>
             <dependency>
                 <groupId>io.preboot</groupId>
                 <artifactId>preboot-notifications</artifactId>
-                <version>1.1.0-SNAPSHOT</version>
+                <version>1.1.0</version>
             </dependency>
             <dependency>
                 <groupId>io.preboot</groupId>
                 <artifactId>preboot-auth-api</artifactId>
-                <version>1.1.0-SNAPSHOT</version>
+                <version>1.1.0</version>
             </dependency>
             <dependency>
                 <groupId>io.preboot</groupId>
                 <artifactId>preboot-auth-core</artifactId>
-                <version>1.1.0-SNAPSHOT</version>
+                <version>1.1.0</version>
                 <scope>runtime</scope>
             </dependency>
             <dependency>
                 <groupId>io.preboot</groupId>
                 <artifactId>preboot-auth-emails</artifactId>
-                <version>1.1.0-SNAPSHOT</version>
+                <version>1.1.0</version>
             </dependency>
             <dependency>
                 <groupId>io.preboot</groupId>
                 <artifactId>preboot-templates-api</artifactId>
-                <version>1.1.0-SNAPSHOT</version>
+                <version>1.1.0</version>
             </dependency>
             <dependency>
                 <groupId>io.preboot</groupId>
                 <artifactId>preboot-templates-thymeleaf</artifactId>
-                <version>1.1.0-SNAPSHOT</version>
+                <version>1.1.0</version>
             </dependency>
             <dependency>
                 <groupId>io.preboot</groupId>
                 <artifactId>preboot-query</artifactId>
-                <version>1.1.0-SNAPSHOT</version>
+                <version>1.1.0</version>
             </dependency>
             <dependency>
                 <groupId>io.preboot</groupId>
                 <artifactId>preboot-securedata</artifactId>
-                <version>1.1.0-SNAPSHOT</version>
+                <version>1.1.0</version>
             </dependency>
             <dependency>
                 <groupId>io.preboot</groupId>
                 <artifactId>preboot-exporters-api</artifactId>
-                <version>1.1.0-SNAPSHOT</version>
+                <version>1.1.0</version>
             </dependency>
             <dependency>
                 <groupId>io.preboot</groupId>
                 <artifactId>preboot-exporters-excel</artifactId>
-                <version>1.1.0-SNAPSHOT</version>
+                <version>1.1.0</version>
             </dependency>
             <dependency>
                 <groupId>io.preboot</groupId>
                 <artifactId>preboot-feature-flags</artifactId>
-                <version>1.1.0-SNAPSHOT</version>
+                <version>1.1.0</version>
             </dependency>
             <dependency>
                 <groupId>io.preboot</groupId>
                 <artifactId>preboot-files-api</artifactId>
-                <version>1.1.0-SNAPSHOT</version>
+                <version>1.1.0</version>
             </dependency>
             <dependency>
                 <groupId>io.preboot</groupId>
                 <artifactId>preboot-files-in-memory</artifactId>
-                <version>1.1.0-SNAPSHOT</version>
+                <version>1.1.0</version>
             </dependency>
             <dependency>
                 <groupId>io.preboot</groupId>
                 <artifactId>preboot-files-rest</artifactId>
-                <version>1.1.0-SNAPSHOT</version>
+                <version>1.1.0</version>
             </dependency>
             <!-- Starters -->
             <dependency>
                 <groupId>io.preboot</groupId>
                 <artifactId>preboot-auth-starter</artifactId>
-                <version>1.1.0-SNAPSHOT</version>
+                <version>1.1.0</version>
             </dependency>
 
             <!-- Spring Boot -->
