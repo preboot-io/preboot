@@ -90,6 +90,7 @@ public abstract class CrudUuidFilterableController<T extends HasUuid, ID> extend
             return ResponseEntity.notFound().build();
         }
 
+        entity.setUuid(uuid);
         validateUpdate(uuid, entity);
         beforeUpdate(uuid, entity);
         T savedEntity = repository.save(entity);

@@ -85,6 +85,7 @@ public abstract class CrudFilterableController<T, ID> extends FilterableControll
         if (!repository.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
+        setEntityId(entity, id);
         validateUpdate(id, entity);
         beforeUpdate(id, entity);
         T savedEntity = repository.save(entity);
@@ -154,6 +155,25 @@ public abstract class CrudFilterableController<T, ID> extends FilterableControll
     protected void beforeDelete(ID id) {}
 
     protected void afterDelete(ID id) {}
+
+    /**
+     * Sets the entity ID to match the path parameter to prevent ID mismatch attacks.
+     * Uses reflection to find and set the @Id annotated field.
+     */
+    @SuppressWarnings("unchecked")
+    private void setEntityId(T entity, ID id) {
+        try {
+            // Find field annotated with @Id
+            var idField = entity.getClass().getDeclaredField("id");
+            idField.setAccessible(true);
+            idField.set(entity, id);
+            idField.setAccessible(false);
+        } catch (Exception e) {
+            // If we can't set the ID, fail safely
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "Cannot set entity ID: " + e.getMessage());
+        }
+    }
 
     /**
      * Merge the partial entity into the existing entity. Uses Jackson's ObjectMapper to perform a deep merge of
