@@ -26,6 +26,7 @@ class InMemoryFileStorageServiceTest {
 
     private InMemoryFileStorageService fileStorageService;
     private EventPublisher eventPublisher;
+    private static final long MAX_FILE_SIZE = 52428800L; // 50MB default
 
     private static final String TEST_FILE_NAME = "test.txt";
     private static final String TEST_CONTENT_TYPE = "text/plain";
@@ -36,7 +37,7 @@ class InMemoryFileStorageServiceTest {
     @BeforeEach
     void setUp() {
         eventPublisher = mock(EventPublisher.class);
-        fileStorageService = new InMemoryFileStorageService(eventPublisher);
+        fileStorageService = new InMemoryFileStorageService(eventPublisher, MAX_FILE_SIZE);
     }
 
     @Test
@@ -89,7 +90,7 @@ class InMemoryFileStorageServiceTest {
     @Test
     void whenStoreFileTooLarge_thenThrowException() {
         // Given
-        byte[] largeContent = new byte[11 * 1024 * 1024]; // 11MB - over the 10MB limit
+        byte[] largeContent = new byte[(int) (MAX_FILE_SIZE + 1)]; // 1 byte over limit
         InputStream largeStream = new ByteArrayInputStream(largeContent);
 
         // When & Then

@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import io.preboot.auth.api.SessionAwareAuthentication;
 import io.preboot.auth.api.UserAccountManagementApi;
 import io.preboot.auth.api.dto.CreateInactiveUserAccountRequest;
 import io.preboot.auth.api.dto.UserAccountInfo;
@@ -15,7 +16,6 @@ import io.preboot.auth.core.repository.TenantRepository;
 import io.preboot.auth.core.repository.UserAccountRepository;
 import io.preboot.auth.core.repository.UserAccountSessionRepository;
 import io.preboot.auth.core.repository.UserAccountTenantRepository;
-import io.preboot.auth.core.spring.SessionAwareAuthentication;
 import io.preboot.auth.test.eventhandler.AccountActivationEventHandler;
 import io.preboot.auth.test.utils.CreateUserAccountHelper;
 import io.preboot.query.SearchParams;

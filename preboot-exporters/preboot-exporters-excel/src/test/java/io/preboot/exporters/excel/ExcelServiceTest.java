@@ -128,6 +128,92 @@ class ExcelServiceTest {
         assertThat(contentDispositionCaptor.getAllValues().get(1)).contains("test-file.xlsx");
     }
 
+    @Test
+    void exportToOutputStream_WithValidData_ShouldGenerateExcelFile() throws IOException {
+        // Arrange
+        TestData data1 = new TestData(1L, "Test1", new BigDecimal("123.45"), Instant.parse("2023-01-01T10:00:00Z"));
+        TestData data2 = new TestData(2L, "Test2", new BigDecimal("456.78"), Instant.parse("2023-01-02T12:00:00Z"));
+        List<TestData> dataList = List.of(data1, data2);
+        Stream<TestData> dataStream = dataList.stream();
+
+        Map<String, String> labels = Map.of(
+                "id", "ID",
+                "name", "Name",
+                "amount", "Amount",
+                "date", "Date");
+
+        ByteArrayOutputStream testOutputStream = new ByteArrayOutputStream();
+
+        // Use a real ObjectNode instead of a mock
+        when(objectMapper.valueToTree(any())).thenReturn(new com.fasterxml.jackson.databind.node.ObjectNode(null));
+
+        // Act
+        excelService.exportToOutputStream("test-output-file", labels, testOutputStream, locale, dataStream);
+
+        // Assert
+        assertThat(testOutputStream.size()).isGreaterThan(0);
+
+        Workbook workbook = new XSSFWorkbook(new ByteArrayInputStream(testOutputStream.toByteArray()));
+        assertThat(workbook.getNumberOfSheets()).isEqualTo(1);
+
+        Sheet sheet = workbook.getSheetAt(0);
+        assertThat(sheet.getPhysicalNumberOfRows()).isGreaterThan(0);
+
+        // Verify header row
+        Row headerRow = sheet.getRow(0);
+        assertThat(headerRow).isNotNull();
+        assertThat(headerRow.getPhysicalNumberOfCells()).isEqualTo(4);
+
+        workbook.close();
+    }
+
+    @Test
+    void exportToOutputStream_WithNullFilename_ShouldStillGenerateFile() throws IOException {
+        // Arrange
+        TestData data = new TestData(1L, "Test", new BigDecimal("100.00"), Instant.now());
+        Map<String, String> labels = Map.of("id", "ID", "name", "Name");
+        ByteArrayOutputStream testOutputStream = new ByteArrayOutputStream();
+
+        // Use a real ObjectNode instead of a mock
+        when(objectMapper.valueToTree(any())).thenReturn(new com.fasterxml.jackson.databind.node.ObjectNode(null));
+
+        // Act
+        excelService.exportToOutputStream(null, labels, testOutputStream, locale, Stream.of(data));
+
+        // Assert
+        assertThat(testOutputStream.size()).isGreaterThan(0);
+
+        Workbook workbook = new XSSFWorkbook(new ByteArrayInputStream(testOutputStream.toByteArray()));
+        assertThat(workbook.getNumberOfSheets()).isEqualTo(1);
+        workbook.close();
+    }
+
+    @Test
+    void exportToOutputStream_WithEmptyData_ShouldGenerateFileWithHeadersOnly() throws IOException {
+        // Arrange
+        Map<String, String> labels = Map.of("id", "ID", "name", "Name");
+        ByteArrayOutputStream testOutputStream = new ByteArrayOutputStream();
+        Stream<TestData> emptyStream = Stream.empty();
+
+        // Act
+        excelService.exportToOutputStream("empty-file", labels, testOutputStream, locale, emptyStream);
+
+        // Assert
+        assertThat(testOutputStream.size()).isGreaterThan(0);
+
+        Workbook workbook = new XSSFWorkbook(new ByteArrayInputStream(testOutputStream.toByteArray()));
+        assertThat(workbook.getNumberOfSheets()).isEqualTo(1);
+
+        Sheet sheet = workbook.getSheetAt(0);
+        assertThat(sheet.getPhysicalNumberOfRows()).isEqualTo(1); // Only header row
+
+        Row headerRow = sheet.getRow(0);
+        assertThat(headerRow).isNotNull();
+        assertThat(headerRow.getPhysicalNumberOfCells()).isEqualTo(2);
+
+        workbook.close();
+    }
+
     private void setupResponseMock() throws IOException {
         // Setup response mock
         when(response.getOutputStream()).thenReturn(new ServletOutputStream() {

@@ -1,4 +1,4 @@
-package io.preboot.auth.core.spring;
+package io.preboot.auth.api;
 
 import io.preboot.auth.api.dto.UserAccountInfo;
 import java.util.Collection;

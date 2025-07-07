@@ -3,6 +3,7 @@ package io.preboot.eventbus;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.*;
+import java.util.concurrent.locks.ReentrantLock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -11,6 +12,8 @@ import org.springframework.context.ApplicationContextAware;
 public class LocalEventHandlerRepository implements ApplicationContextAware {
     private static final Logger log = LoggerFactory.getLogger(LocalEventHandlerRepository.class);
     private final Map<Class<?>, List<HandlerMethod>> eventHandlers = new HashMap<>();
+    private final ReentrantLock initializationLock = new ReentrantLock();
+    private volatile boolean initialized = false;
     private ApplicationContext applicationContext;
 
     private record HandlerMethod(Object instance, Method method, int priority, Class<?> typeParameter) {}
@@ -21,18 +24,30 @@ public class LocalEventHandlerRepository implements ApplicationContextAware {
     }
 
     private void initializeHandlers() {
-        if (!eventHandlers.isEmpty()) {
+        if (initialized) {
             return; // Already initialized
         }
 
-        String[] beanNames = applicationContext.getBeanDefinitionNames();
-        for (String beanName : beanNames) {
-            try {
-                Object bean = applicationContext.getBean(beanName);
-                scanBean(bean);
-            } catch (Exception e) {
-                log.debug("Could not process bean {} for event handlers: {}", beanName, e.getMessage());
+        initializationLock.lock();
+        try {
+            // Double-checked locking pattern
+            if (initialized) {
+                return; // Another thread already initialized
             }
+
+            String[] beanNames = applicationContext.getBeanDefinitionNames();
+            for (String beanName : beanNames) {
+                try {
+                    Object bean = applicationContext.getBean(beanName);
+                    scanBean(bean);
+                } catch (Exception e) {
+                    log.debug("Could not process bean {} for event handlers: {}", beanName, e.getMessage());
+                }
+            }
+
+            initialized = true;
+        } finally {
+            initializationLock.unlock();
         }
     }
 
