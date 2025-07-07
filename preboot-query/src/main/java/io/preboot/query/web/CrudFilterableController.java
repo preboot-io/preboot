@@ -157,8 +157,8 @@ public abstract class CrudFilterableController<T, ID> extends FilterableControll
     protected void afterDelete(ID id) {}
 
     /**
-     * Sets the entity ID to match the path parameter to prevent ID mismatch attacks.
-     * Uses reflection to find and set the @Id annotated field.
+     * Sets the entity ID to match the path parameter to prevent ID mismatch attacks. Uses reflection to find and set
+     * the @Id annotated field.
      */
     @SuppressWarnings("unchecked")
     private void setEntityId(T entity, ID id) {
@@ -170,8 +170,7 @@ public abstract class CrudFilterableController<T, ID> extends FilterableControll
             idField.setAccessible(false);
         } catch (Exception e) {
             // If we can't set the ID, fail safely
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "Cannot set entity ID: " + e.getMessage());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot set entity ID: " + e.getMessage());
         }
     }
 
