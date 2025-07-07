@@ -1,7 +1,12 @@
 ## 1.1.1
+preboot-query:
+- Fixed ID mismatch vulnerability in CrudFilterableController update method - entity ID now enforced to match path parameter
+- Fixed UUID mismatch vulnerability in CrudUuidFilterableController update method - entity UUID now enforced to match path parameter
+
+## 1.1.0
 preboot-eventbus-core:
 - fixed thread safety in event handler initialization
-
+  
 preboot-query:
 - fixed enum handling in FilterCriteria - enum values are now automatically converted to their string representation
 - added support for passing enum instances directly to FilterCriteria.eq(), FilterCriteria.neq(), FilterCriteria.in(), and other filter operations
@@ -9,9 +14,6 @@ preboot-query:
 - fixed Instant type handling for PostgreSQL compatibility - Instant values are now properly converted to java.sql.Timestamp
 - added support for string-based date inputs when filtering Instant fields (both direct string values and string arrays)
 - fixed array type inference for IN operations with temporal values (Instant, LocalDateTime, java.sql.Timestamp)
-
-## 1.1.0
-preboot-query:
 - added asynchronous export functionality to FilterableController and UuidFilterableController with generic processing
 preboot-auth:
 - moved SessionAwareAuthentication from auth-core to auth-api
