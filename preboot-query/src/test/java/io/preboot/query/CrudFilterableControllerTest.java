@@ -3,6 +3,7 @@ package io.preboot.query;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.preboot.query.web.CrudFilterableController;
@@ -164,6 +165,37 @@ class CrudFilterableControllerTest {
 
             // Assert
             assertThat(response.getStatusCode().is4xxClientError()).isTrue();
+        }
+    }
+
+    @Nested
+    class UpdateTests {
+
+        @Test
+        void shouldEnforceIdMatchBetweenPathAndEntity() {
+            // Arrange
+            TestEntity entityWithWrongId = TestEntity.builder()
+                    .id(999L)  // Different ID than path parameter
+                    .name("Updated Name")
+                    .amount(BigDecimal.valueOf(200))
+                    .build();
+
+            when(repository.existsById(1L)).thenReturn(true);
+            when(repository.save(any())).thenAnswer(i -> i.getArgument(0));
+
+            // Act
+            ResponseEntity<TestEntity> response = controller.update(1L, entityWithWrongId);
+
+            // Assert
+            assertThat(response.getStatusCode().is2xxSuccessful()).isTrue();
+            TestEntity result = response.getBody();
+            assertThat(result).isNotNull();
+            assertThat(result.getId()).isEqualTo(1L); // Should match path parameter, not entity's original ID
+            assertThat(result.getName()).isEqualTo("Updated Name");
+            assertThat(result.getAmount()).isEqualByComparingTo(BigDecimal.valueOf(200));
+
+            // Verify the entity saved has the correct ID
+            verify(repository).save(any(TestEntity.class));
         }
     }
 
