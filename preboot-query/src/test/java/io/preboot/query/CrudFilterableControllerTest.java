@@ -2,8 +2,8 @@ package io.preboot.query;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.preboot.query.web.CrudFilterableController;
@@ -175,7 +175,7 @@ class CrudFilterableControllerTest {
         void shouldEnforceIdMatchBetweenPathAndEntity() {
             // Arrange
             TestEntity entityWithWrongId = TestEntity.builder()
-                    .id(999L)  // Different ID than path parameter
+                    .id(999L) // Different ID than path parameter
                     .name("Updated Name")
                     .amount(BigDecimal.valueOf(200))
                     .build();

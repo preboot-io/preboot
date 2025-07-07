@@ -126,15 +126,16 @@
                             </palantirJavaFormat>
                             <removeUnusedImports/>
                             <formatAnnotations/>
+                            <trimTrailingWhitespace/>
+                            <endWithNewline/>
                         </java>
                     </configuration>
                     <executions>
                         <execution>
-                            <id>spotless-check</id>
                             <goals>
                                 <goal>check</goal>
+                                <goal>apply</goal>
                             </goals>
-                            <phase>package</phase>
                         </execution>
                     </executions>
                 </plugin>
