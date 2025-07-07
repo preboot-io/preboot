@@ -4,7 +4,7 @@
     <parent>
         <groupId>io.preboot</groupId>
         <artifactId>preboot-parent</artifactId>
-        <version>1.1.1</version>
+        <version>1.1.2-SNAPSHOT</version>
     </parent>
 
     <artifactId>preboot-core</artifactId>
@@ -17,7 +17,7 @@
             <dependency>
                 <groupId>io.preboot</groupId>
                 <artifactId>preboot-bom</artifactId>
-                <version>1.1.1</version>
+                <version>1.1.2-SNAPSHOT</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
