@@ -4,7 +4,7 @@
     <parent>
         <groupId>io.preboot</groupId>
         <artifactId>preboot-parent</artifactId>
-        <version>1.1.2-SNAPSHOT</version>
+        <version>1.1.2</version>
     </parent>
 
     <artifactId>preboot-exporters</artifactId>
