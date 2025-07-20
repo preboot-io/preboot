@@ -78,8 +78,6 @@ public class JwtTokenService {
         return Jwts.builder()
                 .subject(userId.toString())
                 .issuedAt(new Date())
-                .expiration(Date.from(
-                        Instant.now().plus(securityProperties.getActivationTokenTimeoutInDays(), ChronoUnit.DAYS)))
                 .signWith(getSigningKey())
                 .compact();
     }
@@ -92,7 +90,7 @@ public class JwtTokenService {
                     .parseSignedClaims(token)
                     .getPayload();
         } catch (JwtException e) {
-            throw new InvalidActivationTokenException("Invalid or expired activation token");
+            throw new InvalidActivationTokenException("Invalid activation token");
         }
     }
 }

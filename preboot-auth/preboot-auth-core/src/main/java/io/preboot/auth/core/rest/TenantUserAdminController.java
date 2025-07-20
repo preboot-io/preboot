@@ -3,6 +3,7 @@ package io.preboot.auth.core.rest;
 import io.preboot.auth.api.SessionAwareAuthentication;
 import io.preboot.auth.api.UserAccountManagementApi;
 import io.preboot.auth.api.dto.CreateInactiveUserAccountRequest;
+import io.preboot.auth.api.dto.ResentActivationLinkCommand;
 import io.preboot.auth.api.dto.TenantUserAssignRequest;
 import io.preboot.auth.api.dto.UserAccountInfo;
 import io.preboot.auth.api.exception.UserAccountNotFoundException;
@@ -166,6 +167,17 @@ public class TenantUserAdminController {
             return userInfo.uuid();
         }
         throw new IllegalStateException("Unable to determine current user");
+    }
+
+    /** Send activation link again to the inactive user */
+    @PostMapping("/{userId}/resend-activation-link")
+    public void resendActivationLink(@PathVariable UUID userId) {
+        UUID tenantId = tenantResolver.getCurrentTenant();
+        if (tenantId == null) {
+            throw new IllegalStateException(
+                    "Current tenant ID is null. Make sure you are authenticated and have selected a tenant.");
+        }
+        userAccountManagementApi.resendActivationLink(new ResentActivationLinkCommand(userId, tenantId));
     }
 
     @ExceptionHandler(UserAccountNotFoundException.class)

@@ -1,16 +1,8 @@
 package io.preboot.auth.core;
 
 import io.preboot.auth.api.UserAccountManagementApi;
-import io.preboot.auth.api.dto.CreateInactiveUserAccountRequest;
-import io.preboot.auth.api.dto.CreateTenantAndInactiveUserAccountRequest;
-import io.preboot.auth.api.dto.UpdatePasswordCommand;
-import io.preboot.auth.api.dto.UserAccountInfo;
-import io.preboot.auth.core.usecase.CreateInactiveUserAccountUseCase;
-import io.preboot.auth.core.usecase.CreateTenantAndInactiveUserAccountUseCase;
-import io.preboot.auth.core.usecase.GetUserAccountUseCase;
-import io.preboot.auth.core.usecase.ManageUserAccountRolesUseCase;
-import io.preboot.auth.core.usecase.RemoveUserAccountUseCase;
-import io.preboot.auth.core.usecase.UpdatePasswordUseCase;
+import io.preboot.auth.api.dto.*;
+import io.preboot.auth.core.usecase.*;
 import io.preboot.core.validation.BeanValidator;
 import io.preboot.query.SearchParams;
 import java.util.UUID;
@@ -27,6 +19,7 @@ class UserAccountManagementApiImpl implements UserAccountManagementApi {
     private final UpdatePasswordUseCase updatePasswordUseCase;
     private final RemoveUserAccountUseCase removeUserAccountUseCase;
     private final CreateTenantAndInactiveUserAccountUseCase createTenantAndInactiveUserAccountUseCase;
+    private final ResendActivationLinkUseCase resendActivationLinkUseCase;
 
     @Override
     public UserAccountInfo getUserAccount(final UUID userAccountId, final UUID tenantId) {
@@ -41,6 +34,11 @@ class UserAccountManagementApiImpl implements UserAccountManagementApi {
     @Override
     public UserAccountInfo createTenantAndUserAccount(final CreateTenantAndInactiveUserAccountRequest request) {
         return createTenantAndInactiveUserAccountUseCase.execute(request);
+    }
+
+    @Override
+    public void resendActivationLink(ResentActivationLinkCommand command) {
+        resendActivationLinkUseCase.execute(command);
     }
 
     @Override
