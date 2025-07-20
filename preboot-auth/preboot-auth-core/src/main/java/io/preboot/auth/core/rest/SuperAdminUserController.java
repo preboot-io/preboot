@@ -2,6 +2,7 @@ package io.preboot.auth.core.rest;
 
 import io.preboot.auth.api.UserAccountManagementApi;
 import io.preboot.auth.api.dto.CreateInactiveUserAccountRequest;
+import io.preboot.auth.api.dto.ResentActivationLinkCommand;
 import io.preboot.auth.api.dto.UserAccountInfo;
 import io.preboot.auth.api.exception.UserAccountNotFoundException;
 import io.preboot.auth.api.guard.SuperAdminRoleAccessGuard;
@@ -100,6 +101,12 @@ public class SuperAdminUserController {
             @PathVariable UUID userId, @PathVariable UUID tenantId, @PathVariable String roleName) {
 
         return userAccountManagementApi.removeRole(userId, tenantId, roleName);
+    }
+
+    /** Send activation link again to the inactive user */
+    @PostMapping("/{userId}/resend-activation-link")
+    public void resendActivationLink(@PathVariable UUID userId) {
+        userAccountManagementApi.resendActivationLink(new ResentActivationLinkCommand(userId, null));
     }
 
     @ExceptionHandler(UserAccountNotFoundException.class)

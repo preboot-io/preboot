@@ -1,3 +1,8 @@
+## 1.1.2
+preboot-auth:
+- resend activation link functionality
+- removed activation link expiration
+
 ## 1.1.1
 preboot-query:
 - Fixed ID mismatch vulnerability in CrudFilterableController update method - entity ID now enforced to match path parameter

@@ -14,6 +14,5 @@ public class AuthSecurityProperties {
     private long sessionTimeoutMinutes = 15;
     private long longSessionTimeoutDays = 15;
     private long passwordResetTokenTimeoutInDays = 2;
-    private long activationTokenTimeoutInDays = 30;
     List<String> corsAllowedOrigins = new ArrayList<>();
 }

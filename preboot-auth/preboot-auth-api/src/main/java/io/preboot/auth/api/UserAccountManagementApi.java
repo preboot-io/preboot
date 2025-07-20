@@ -1,9 +1,6 @@
 package io.preboot.auth.api;
 
-import io.preboot.auth.api.dto.CreateInactiveUserAccountRequest;
-import io.preboot.auth.api.dto.CreateTenantAndInactiveUserAccountRequest;
-import io.preboot.auth.api.dto.UpdatePasswordCommand;
-import io.preboot.auth.api.dto.UserAccountInfo;
+import io.preboot.auth.api.dto.*;
 import io.preboot.query.SearchParams;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
@@ -14,6 +11,8 @@ public interface UserAccountManagementApi {
     UserAccountInfo createUserAccountForTenant(CreateInactiveUserAccountRequest request);
 
     UserAccountInfo createTenantAndUserAccount(CreateTenantAndInactiveUserAccountRequest request);
+
+    void resendActivationLink(ResentActivationLinkCommand command);
 
     void updatePassword(UpdatePasswordCommand command);
 
