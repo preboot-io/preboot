@@ -9,8 +9,8 @@
 
     <artifactId>preboot-observability</artifactId>
 
-    <name>PreBoot.io Community Edition :: Observability</name>
-    <description>Parent POM for the PreBoot.io Community Edition Observability module</description>
+    <name>PreBoot.io :: Observability</name>
+    <description>Parent POM for the PreBoot.io Observability module</description>
 
     <dependencyManagement>
         <dependencies>

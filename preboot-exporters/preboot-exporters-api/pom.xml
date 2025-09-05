@@ -9,8 +9,8 @@
 
     <artifactId>preboot-exporters-api</artifactId>
 
-    <name>PreBoot.io Community Edition :: Exporters API</name>
-    <description>Parent POM for the PreBoot.io Community Edition Exporters API module</description>
+    <name>PreBoot.io :: Exporters API</name>
+    <description>Parent POM for the PreBoot.io Exporters API module</description>
 
     <dependencyManagement>
         <dependencies>

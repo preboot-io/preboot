@@ -64,6 +64,17 @@ public class InMemoryFileStorageService implements FileStorageService {
     @Override
     public CompletableFuture<FileMetadata> storeFile(
             String fileName, String contentType, InputStream content, UUID authorId, UUID tenantId) {
+        return storeFile(fileName, contentType, content, authorId, tenantId, null);
+    }
+
+    @Override
+    public CompletableFuture<FileMetadata> storeFile(
+            String fileName,
+            String contentType,
+            InputStream content,
+            UUID authorId,
+            UUID tenantId,
+            Map<String, String> customAttributes) {
 
         return CompletableFuture.supplyAsync(() -> {
             try {
@@ -79,6 +90,10 @@ public class InMemoryFileStorageService implements FileStorageService {
 
                 FileMetadata metadata =
                         FileMetadata.create(fileName, contentType, fileBytes.length, authorId, tenantId);
+
+                if (customAttributes != null && !customAttributes.isEmpty()) {
+                    metadata.customAttributes().putAll(customAttributes);
+                }
 
                 StoredFile storedFile = new StoredFile(metadata, fileBytes);
                 storeFileAtomically(tenantId, metadata.fileId(), storedFile);

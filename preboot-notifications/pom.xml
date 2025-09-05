@@ -9,8 +9,8 @@
 
     <artifactId>preboot-notifications</artifactId>
 
-    <name>PreBoot.io Community Edition :: Notifications</name>
-    <description>Parent POM for the PreBoot.io Community Edition Notifications module</description>
+    <name>PreBoot.io :: Notifications</name>
+    <description>Parent POM for the PreBoot.io Notifications module</description>
 
     <dependencyManagement>
         <dependencies>

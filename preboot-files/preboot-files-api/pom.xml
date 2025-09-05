@@ -9,8 +9,8 @@
 
     <artifactId>preboot-files-api</artifactId>
 
-    <name>PreBoot.io Community Edition :: Files API</name>
-    <description>Parent POM for the PreBoot.io Community Edition Files API module</description>
+    <name>PreBoot.io :: Files API</name>
+    <description>Parent POM for the PreBoot.io Files API module</description>
 
     <dependencyManagement>
         <dependencies>

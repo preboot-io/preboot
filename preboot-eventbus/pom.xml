@@ -10,8 +10,8 @@
     <artifactId>preboot-eventbus</artifactId>
     <packaging>pom</packaging>
 
-    <name>PreBoot.io Community Edition :: Eventbus</name>
-    <description>Parent POM for the PreBoot.io Community Edition Eventbus parent module</description>
+    <name>PreBoot.io :: Eventbus</name>
+    <description>Parent POM for the PreBoot.io Eventbus parent module</description>
 
     <modules>
         <module>preboot-eventbus-core</module>

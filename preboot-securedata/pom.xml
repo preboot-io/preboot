@@ -9,8 +9,8 @@
 
     <artifactId>preboot-securedata</artifactId>
 
-    <name>PreBoot.io Community Edition :: Securedata</name>
-    <description>Parent POM for the PreBoot.io Community Edition Securedata module</description>
+    <name>PreBoot.io :: Securedata</name>
+    <description>Parent POM for the PreBoot.io Securedata module</description>
 
     <dependencyManagement>
         <dependencies>
