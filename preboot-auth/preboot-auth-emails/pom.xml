@@ -9,8 +9,8 @@
 
     <artifactId>preboot-auth-emails</artifactId>
 
-    <name>PreBoot.io Community Edition :: Auth Emails</name>
-    <description>PreBoot.io Community Edition Auth Emails module</description>
+    <name>PreBoot.io :: Auth Emails</name>
+    <description>PreBoot.io Auth Emails module</description>
 
     <dependencyManagement>
         <dependencies>

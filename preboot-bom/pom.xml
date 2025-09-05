@@ -10,13 +10,14 @@
     <artifactId>preboot-bom</artifactId>
     <packaging>pom</packaging>
 
-    <name>PreBoot.io Community Edition :: BOM</name>
-    <description>PreBoot.io Community Edition BOM module</description>
+    <name>PreBoot.io :: BOM</name>
+    <description>PreBoot.io BOM module</description>
 
     <properties>
         <!-- Define a default Spring Boot version for internal testing -->
-        <spring-boot.version>3.4.1</spring-boot.version>
+        <spring-boot.version>3.5.5</spring-boot.version>
         <jjwt.version>0.12.6</jjwt.version>
+        <aws-sdk.version>2.28.29</aws-sdk.version>
         <!-- Test dependencies versions -->
         <junit-jupiter.version>5.10.1</junit-jupiter.version>
         <assertj-core.version>3.24.2</assertj-core.version>
@@ -114,6 +115,11 @@
                 <artifactId>preboot-files-rest</artifactId>
                 <version>1.1.2-SNAPSHOT</version>
             </dependency>
+            <dependency>
+                <groupId>io.preboot</groupId>
+                <artifactId>preboot-files-s3</artifactId>
+                <version>1.1.2-SNAPSHOT</version>
+            </dependency>
             <!-- Starters -->
             <dependency>
                 <groupId>io.preboot</groupId>
@@ -163,6 +169,15 @@
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
                 <version>3.17.0</version>
+            </dependency>
+
+            <!-- AWS SDK v2 BOM -->
+            <dependency>
+                <groupId>software.amazon.awssdk</groupId>
+                <artifactId>bom</artifactId>
+                <version>${aws-sdk.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
 
             <!-- Test Dependencies -->

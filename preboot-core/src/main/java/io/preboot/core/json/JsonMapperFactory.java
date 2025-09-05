@@ -3,6 +3,7 @@ package io.preboot.core.json;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 
@@ -13,6 +14,7 @@ public class JsonMapperFactory {
         // Register modules
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.registerModule(new ParameterNamesModule());
+        objectMapper.registerModule(new Jdk8Module());
 
         // Configure common settings
         objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);

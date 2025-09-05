@@ -9,8 +9,8 @@
 
     <artifactId>preboot-auth-api</artifactId>
 
-    <name>PreBoot.io Community Edition :: Auth API</name>
-    <description>PreBoot.io Community Edition Auth API module</description>
+    <name>PreBoot.io :: Auth API</name>
+    <description>PreBoot.io Auth API module</description>
 
     <dependencyManagement>
         <dependencies>
