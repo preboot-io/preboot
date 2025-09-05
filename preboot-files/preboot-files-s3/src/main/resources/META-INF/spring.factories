@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+io.preboot.files.s3.S3FileStorageAutoConfiguration

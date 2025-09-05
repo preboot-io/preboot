@@ -9,8 +9,8 @@
 
     <artifactId>preboot-files-rest</artifactId>
 
-    <name>PreBoot.io Community Edition :: Files Rest</name>
-    <description>Parent POM for the PreBoot.io Community Edition Files Rest module</description>
+    <name>PreBoot.io :: Files Rest</name>
+    <description>Parent POM for the PreBoot.io Files Rest module</description>
 
     <dependencyManagement>
         <dependencies>

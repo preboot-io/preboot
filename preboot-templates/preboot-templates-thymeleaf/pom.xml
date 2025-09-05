@@ -9,8 +9,8 @@
 
     <artifactId>preboot-templates-thymeleaf</artifactId>
 
-    <name>PreBoot.io Community Edition :: Templates Thymeleaf</name>
-    <description>Parent POM for the PreBoot.io Community Edition Templates Thymeleaf module</description>
+    <name>PreBoot.io :: Templates Thymeleaf</name>
+    <description>Parent POM for the PreBoot.io Templates Thymeleaf module</description>
 
 
     <dependencyManagement>

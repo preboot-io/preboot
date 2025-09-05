@@ -1,0 +1,122 @@
+# PreBoot Files S3 Configuration Example
+# 
+# This file demonstrates how to configure the PreBoot Files S3 module
+# for various S3-compatible storage services.
+
+preboot:
+  files:
+    s3:
+      # Required: S3 bucket name where files will be stored
+      bucket-name: my-app-files-bucket
+      
+      # Required: AWS region (default: us-east-1)
+      region: us-east-1
+      
+      # Optional: Custom endpoint URL for S3-compatible services
+      # Examples:
+      # OVH Cloud: https://s3.gra.io.cloud.ovh.net
+      # MinIO: http://localhost:9000
+      # DigitalOcean Spaces: https://nyc3.digitaloceanspaces.com
+      # endpoint-url: https://s3.gra.io.cloud.ovh.net
+      
+      # Optional: AWS credentials (if not provided, uses AWS default credential chain)
+      # access-key-id: AKIAIOSFODNN7EXAMPLE
+      # secret-access-key: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+      
+      # Optional: Maximum file size in bytes (default: 52428800 = 50MB)
+      max-file-size: 52428800
+
+# Alternative configurations for different environments:
+
+---
+# Development with MinIO (local S3-compatible server)
+spring:
+  config:
+    activate:
+      on-profile: dev-minio
+
+preboot:
+  files:
+    s3:
+      bucket-name: dev-files
+      region: us-east-1
+      endpoint-url: http://localhost:9000
+      access-key-id: minioadmin
+      secret-access-key: minioadmin
+      max-file-size: 10485760  # 10MB for development
+
+---
+# Production with AWS S3 (using IAM roles)
+spring:
+  config:
+    activate:
+      on-profile: prod-aws
+
+preboot:
+  files:
+    s3:
+      bucket-name: ${S3_BUCKET_NAME}
+      region: ${AWS_REGION:us-east-1}
+      # No credentials specified - uses EC2/ECS IAM role
+      max-file-size: ${MAX_FILE_SIZE:104857600}  # 100MB for production
+
+---
+# Production with OVH Cloud Storage
+spring:
+  config:
+    activate:
+      on-profile: prod-ovh
+
+preboot:
+  files:
+    s3:
+      bucket-name: ${OVH_BUCKET_NAME}
+      region: gra
+      endpoint-url: https://s3.gra.io.cloud.ovh.net
+      access-key-id: ${OVH_ACCESS_KEY}
+      secret-access-key: ${OVH_SECRET_KEY}
+      max-file-size: ${MAX_FILE_SIZE:52428800}
+
+# Required AWS S3 Permissions:
+# 
+# When using AWS S3, ensure your IAM user/role has the following permissions:
+# {
+#   "Version": "2012-10-17",
+#   "Statement": [
+#     {
+#       "Effect": "Allow",
+#       "Action": [
+#         "s3:GetObject",
+#         "s3:PutObject", 
+#         "s3:DeleteObject",
+#         "s3:ListBucket"
+#       ],
+#       "Resource": [
+#         "arn:aws:s3:::your-bucket-name/*",
+#         "arn:aws:s3:::your-bucket-name"
+#       ]
+#     }
+#   ]
+# }
+#
+# Setup Instructions:
+# 
+# 1. AWS S3:
+#    - Create an S3 bucket in your desired region
+#    - Create IAM user with above permissions OR use IAM roles for EC2/ECS
+#    - Configure properties in application.yml
+# 
+# 2. MinIO (Development):
+#    - Start MinIO server: docker run -p 9000:9000 -p 9001:9001 minio/minio server /data --console-address ":9001"
+#    - Create bucket via MinIO console (http://localhost:9001)
+#    - Use default credentials (minioadmin/minioadmin)
+#
+# 3. OVH Cloud Storage:
+#    - Create Object Storage container in OVH control panel
+#    - Generate S3 credentials in OVH control panel
+#    - Use endpoint-url for your region (gra, sbg, bhs, etc.)
+#
+# 4. Other S3-Compatible Services:
+#    - Check provider documentation for endpoint URL
+#    - Generate access keys according to provider instructions
+#    - Test connectivity with simple operations first

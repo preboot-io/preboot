@@ -4,6 +4,7 @@ import io.preboot.files.model.FileContent;
 import io.preboot.files.model.FileMetadata;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -12,6 +13,14 @@ public interface FileStorageService {
 
     CompletableFuture<FileMetadata> storeFile(
             String fileName, String contentType, InputStream content, UUID authorId, UUID tenantId);
+
+    CompletableFuture<FileMetadata> storeFile(
+            String fileName,
+            String contentType,
+            InputStream content,
+            UUID authorId,
+            UUID tenantId,
+            Map<String, String> customAttributes);
 
     CompletableFuture<Optional<FileContent>> retrieveFile(UUID fileId, UUID tenantId);
 

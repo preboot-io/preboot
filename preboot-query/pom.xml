@@ -9,8 +9,8 @@
 
     <artifactId>preboot-query</artifactId>
 
-    <name>PreBoot.io Community Edition :: Query</name>
-    <description>Parent POM for the PreBoot.io Community Edition Query module</description>
+    <name>PreBoot.io :: Query</name>
+    <description>Parent POM for the PreBoot.io Query module</description>
 
     <dependencyManagement>
         <dependencies>

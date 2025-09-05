@@ -10,8 +10,8 @@
     <artifactId>preboot-auth</artifactId>
     <packaging>pom</packaging>
 
-    <name>PreBoot.io Community Edition :: Auth</name>
-    <description>Parent POM for the PreBoot.io Community Edition Auth parent module</description>
+    <name>PreBoot.io :: Auth</name>
+    <description>Parent POM for the PreBoot.io Auth parent module</description>
 
     <modules>
         <module>preboot-auth-api</module>

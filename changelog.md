@@ -1,3 +1,9 @@
+## 1.1.3
+preboot-files-s3:
+- Support for files operations on s3 compatible hosts
+preboot-files-rest:
+- Changed UserFileController endpoints to not return CompletableFeature as this makes SecurityContext not propagated to the new Thread
+
 ## 1.1.2
 preboot-auth:
 - resend activation link functionality
